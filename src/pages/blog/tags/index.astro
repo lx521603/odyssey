@@ -1,15 +1,11 @@
 ---
-// --- 标签列表首页: /blog/tags ---
-// 路径修正：从 src/pages/blog/tags/ 到 src/layouts/Page.astro 需要 3 级退回
-import PageLayout from '../../../layouts/Page.astro'; 
-import { getCollection } from 'astro:content';
-// 路径修正：从 src/pages/blog/tags/ 到 src/utils/helpers.js 需要 3 级退回
-import { generateTagData } from '../../../utils/helpers.js'; 
+import PageLayout from "@/layouts/Page.astro"; 
+import { generateTagData } from '@/utils/helpers.js'; 
+import { getCollection } from "astro:content";
 
-// 1. 获取所有文章 (使用 getCollection 统一获取方式)
 const posts = await getCollection("post");
 
-// 2. 提取所有唯一的标签
+// 收集所有唯一的标签
 const allTags = new Set<string>();
 posts.forEach(post => {
   if (post.data.tags && Array.isArray(post.data.tags)) {
@@ -17,62 +13,53 @@ posts.forEach(post => {
   }
 });
 
-// 3. 使用 generateTagData 生成包含 slug 的数据
+// 移除对 works 的引用
+
+// 使用 generateTagData 生成可用于 URL 的 slug
 const allTagsData = generateTagData(allTags);
 
-// 4. 计算每个标签的文章数量，用于显示 
-const taggedCounts = allTagsData.map(tag => {
-    const count = posts.filter(post => 
-        post.data.tags && Array.isArray(post.data.tags) && post.data.tags.includes(tag.title)
-    ).length;
-    return { ...tag, count };
-});
+// 计算每个标签的文章数量
+const tagsWithCount = allTagsData.map(tagItem => {
+  const count = posts.filter(post => post.data.tags && post.data.tags.includes(tagItem.title)).length;
+  // 移除 works 相关的计数
+  return { ...tagItem, count };
+}).filter(tagItem => tagItem.count > 0); // 只显示有文章的标签
 
-const seoTitle = '所有文章标签';
-const seoDescription = `博客中使用的所有标签列表，共 ${allTags.size} 个标签。`;
+const seo = {
+	title: '标签列表 | Astro Odyssey Theme',
+	description: '博客所有文章的标签列表。',
+};
 ---
 
-<PageLayout title={seoTitle} description={seoDescription}>
-  <div class="site-container w-full mx-auto px-4 py-12 md:py-20">
-    <div class="text-center mb-10">
-      <h1 class="text-5xl font-extrabold tracking-tight text-gray-900 dark:text-gray-50 mb-3">
-        文章标签
-      </h1>
-      <p class="text-xl text-gray-600 dark:text-gray-400">
-        探索 {allTags.size} 个不同的主题和分类
+<PageLayout {seo}>
+  <div class="relative site-container z-20 w-full mx-auto mt-8 px-4 md:mt-10 lg:mt-12 xl:px-0">
+    <div class="text-center mb-12">
+      <h1 class="text-5xl font-bold mb-4 tracking-tight text-gray-900 dark:text-gray-50">所有标签</h1>
+      <p class="text-lg text-gray-600 dark:text-gray-400">
+        共找到 {tagsWithCount.length} 个活跃标签。点击查看相关文章。
       </p>
     </div>
 
     <section class="max-w-4xl mx-auto">
-      {taggedCounts.length > 0 ? (
-        <div class="flex flex-wrap justify-center gap-4">
-          {taggedCounts.sort((a, b) => b.count - a.count).map(tag => (
+      <ul class="flex flex-wrap gap-4 justify-center">
+        {tagsWithCount.map(tag => (
+          <li>
             <a 
               href={`/blog/tags/${tag.slug}`} 
-              class="
-                inline-flex items-center 
-                bg-white dark:bg-gray-800 
-                hover:bg-blue-50 dark:hover:bg-blue-900 
-                border border-gray-200 dark:border-gray-700 
-                text-gray-700 dark:text-gray-200 
-                px-5 py-2.5 
-                rounded-full shadow-md 
-                transition-all duration-300 
-                transform hover:scale-105
-                focus:outline-none focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-700
-              "
-              aria-label={`查看所有关于 ${tag.title} 的 ${tag.count} 篇文章`}
+              class="inline-block px-4 py-2 text-sm font-semibold rounded-full bg-blue-100 text-blue-800 hover:bg-blue-200 transition duration-150 ease-in-out dark:bg-blue-900 dark:text-blue-200 dark:hover:bg-blue-800"
             >
-              <span class="text-lg font-medium mr-2">{tag.title}</span>
-              <span class="text-sm font-semibold text-blue-600 dark:text-blue-400">({tag.count})</span>
+              {tag.title} ({tag.count})
             </a>
-          ))}
-        </div>
-      ) : (
-        <div class="text-center py-16">
-          <p class="text-xl text-gray-500">目前没有找到任何标签。</p>
-        </div>
-      )}
+          </li>
+        ))}
+      </ul>
     </section>
+
+    {tagsWithCount.length === 0 && (
+      <div class="text-center text-gray-500 dark:text-gray-400 py-12">
+        <p>目前还没有任何标签。</p>
+      </div>
+    )}
   </div>
 </PageLayout>
+
