@@ -1,10 +1,12 @@
 ---
-import Layout from "@/layouts/Layout.astro";
+// 路径修复: 导入 src/layouts/base.astro 并使用 Base 组件
+import Base from "../../../layouts/base.astro"; 
 import BlogCard from "@/components/cards/BlogCard.astro";
 import WorkCard from "@/components/cards/WorkCard.astro";
 import { getCollection } from "astro:content";
 import works from "@/collections/featuredwork.json"; 
-import { generateTagData } from '../../../utils/helpers.js'; // 导入修复后的 helper
+// 路径修复：使用路径别名 @/utils/helpers.js
+import { generateTagData } from '@/utils/helpers.js'; 
 
 // --- 路径生成 ---
 export async function getStaticPaths() {
@@ -53,7 +55,7 @@ const hasBlogPosts = taggedPosts.length > 0;
 const hasWorks = taggedWorks.length > 0;
 ---
 
-<Layout title={`${tagToFilter} - 标签`} description={`包含标签 "${tagToFilter}" 的文章和作品`}>
+<Base title={`${tagToFilter} - 标签`} description={`包含标签 "${tagToFilter}" 的文章和作品`}>
   <div class="relative site-container z-20 w-full mx-auto mt-8 px-4 md:mt-10 lg:mt-12 xl:px-0">
     <div class="text-center mb-8">
       <h1 class="text-5xl font-bold mb-4 tracking-tight text-gray-900 dark:text-gray-50">标签: {tagToFilter}</h1>
@@ -108,5 +110,5 @@ const hasWorks = taggedWorks.length > 0;
       </div>
     )}
   </div>
-</Layout>
+</Base>
 
