@@ -1,7 +1,7 @@
 export const footerSocials = [
   {
     name: 'Twitter',
-    url: 'https://twitter.com/jaydanurwin',
+    url: 'https://twitter.com/oniyt1980',
     icon: "mdi:twitter",
   },
   {
@@ -11,7 +11,7 @@ export const footerSocials = [
   },
   {
     name: 'Github',
-    url: 'https://github.com/jaydanurwin',
+    url: 'https://github.com/lx521603',
     icon: "mdi:github",
   },
   {
@@ -43,15 +43,15 @@ export const footerLists = [
 		title: 'Company',
 		items: [
 			{
-				title: 'About',
+				title: '关于',
 				slug: '/company/about',
 			},
 			{
-				title: 'Blog',
+				title: '博客',
 				slug: '/blog',
 			},
 			{
-				title: 'Contact',
+				title: '联系',
 				slug: '/company/contact',
 			},
 		],
