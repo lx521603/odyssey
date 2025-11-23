@@ -1,75 +1,233 @@
 ---
-import settings from '../../../config/settings';
-// 保持原有的其他导入
+import { Icon } from 'astro-icon/components';
+import { Container, Button } from '../../../components/odyssey-theme.js';
+import settings from '../../../config/settings.js';
 ---
 
-<!-- 保持原有的hero内容 -->
+<Container>
+	<section class="hero-section__section">
+		<div class="hero-section__text">
+				<h1>Welcome to Odyssey</h1>
+				<p>
+					A marketing website theme built with <a
+						href="https://astro.build"
+						target="_blank"
+						rel="noreferrer">Astro</a
+					> and carefully crafted for startups and businesses.
+				</p>
+				<div class="hero-btns__container">
+					<Button href="/theme/get-started" customIcon
+						>Get Started
+            <Fragment slot="icon">
+              <Icon name="ic:baseline-chevron-right"/>
+            </Fragment>
+            </Button
+					>
+					<Button href="/theme/style-guide" unelevated>Style Guide</Button>
+				</div>
+				
+				<!-- 主题切换器部分 -->
+				{settings.enableThemeSwitcher && (
+				  <div class="theme-switcher-section">
+				    <div class="theme-switcher__container">
+				      <div class="theme-select__container">
+				        <button data-theme="default" title="Enable Classic Theme">
+				          🎨
+				        </button>
+				        <p>Classic</p>
+				      </div>
+				      <div class="theme-select__container">
+				        <button data-theme="dark" title="Enable Dark Theme">
+				          🌙
+				        </button>
+				        <p>Dark</p>
+				      </div>
+				      <div class="theme-select__container">
+				        <button data-theme="earth" title="Enable Earth Theme">
+				          🌍
+				        </button>
+				        <p>Earth</p>
+				      </div>
+				      <div class="theme-select__container">
+				        <button data-theme="ocean" title="Enable Ocean Theme">
+				          🌊
+				        </button>
+				        <p>Ocean</p>
+				      </div>
+				      <div class="theme-select__container">
+				        <button data-theme="sand" title="Enable Sand Theme">
+				          🏜️
+				        </button>
+				        <p>Sand</p>
+				      </div>
+				    </div>
+				    
+				    <!-- 添加内联脚本来处理主题切换 -->
+				    <script is:inline>
+				      // 主题切换逻辑
+				      function setTheme(theme) {
+				        const doc = document.firstElementChild;
+				        doc.setAttribute('data-theme', theme);
+				        
+				        const heroImage = document.querySelector('#home-hero-image');
+				        if (heroImage) {
+				          const images = {
+				            'default': '/assets/images/home/classic-hero.jpg',
+				            'dark': '/assets/images/home/dark-hero.jpg', 
+				            'earth': '/assets/images/home/earth-hero.jpg',
+				            'ocean': '/assets/images/home/ocean-hero.jpg',
+				            'sand': '/assets/images/home/sand-hero.jpg'
+				          };
+				          heroImage.src = images[theme] || images['default'];
+				        }
+				        
+				        // 更新按钮激活状态
+				        document.querySelectorAll('.theme-select__container button').forEach(btn => {
+				          if (btn.getAttribute('data-theme') === theme) {
+				            btn.style.border = '2px solid var(--theme-primary)';
+				            btn.style.boxShadow = '0 0 12px 1px var(--theme-primary)';
+				          } else {
+				            btn.style.border = '2px solid transparent';
+				            btn.style.boxShadow = 'none';
+				          }
+				        });
+				        
+				        localStorage.setItem('theme', theme);
+				      }
+				      
+				      // 初始化主题
+				      function initTheme() {
+				        const savedTheme = localStorage.getItem('theme');
+				        if (savedTheme) {
+				          setTheme(savedTheme);
+				        } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+				          setTheme('dark');
+				        } else {
+				          setTheme('default');
+				        }
+				        
+				        // 为按钮添加点击事件
+				        document.querySelectorAll('.theme-select__container button').forEach(button => {
+				          button.addEventListener('click', () => {
+				            const theme = button.getAttribute('data-theme');
+				            setTheme(theme);
+				          });
+				          
+				          // 添加悬停效果
+				          button.addEventListener('mouseenter', () => {
+				            if (!button.style.border.includes('var(--theme-primary)')) {
+				              button.style.border = '2px solid var(--theme-primary)';
+				            }
+				          });
+				          
+				          button.addEventListener('mouseleave', () => {
+				            const currentTheme = localStorage.getItem('theme') || 'default';
+				            if (button.getAttribute('data-theme') !== currentTheme) {
+				              button.style.border = '2px solid transparent';
+				            }
+				          });
+				        });
+				      }
+				      
+				      // 页面加载完成后初始化
+				      if (document.readyState === 'loading') {
+				        document.addEventListener('DOMContentLoaded', initTheme);
+				      } else {
+				        initTheme();
+				      }
+				    </script>
+				  </div>
+				)}
+		</div>
+		<div class="hero-section__image">
+				<picture>
+					<img
+						src="/assets/images/home/classic-hero.jpg"
+						alt="Astro Odyssey"
+						id="home-hero-image"
+					/>
+				</picture>
+		</div>
+	</section>
+</Container>
 
-<!-- 主题切换器部分 -->
-{settings.enableThemeSwitcher && (
-  <div>
-    <!-- 不使用client:only，直接渲染HTML -->
-    <div class="theme-switcher__container">
-      <div class="theme-select__container">
-        <button>Classic</button>
-        <p>Classic</p>
-      </div>
-      <div class="theme-select__container">
-        <button>Dark</button>
-        <p>Dark</p>
-      </div>
-      <div class="theme-select__container">
-        <button>Earth</button>
-        <p>Earth</p>
-      </div>
-      <div class="theme-select__container">
-        <button>Ocean</button>
-        <p>Ocean</p>
-      </div>
-      <div class="theme-select__container">
-        <button>Sand</button>
-        <p>Sand</p>
-      </div>
-    </div>
-    
-    <!-- 添加内联脚本来处理主题切换 -->
-    <script is:inline>
-      // 主题切换逻辑
-      function setTheme(theme) {
-        const doc = document.firstElementChild;
-        doc.setAttribute('data-theme', theme);
-        
-        const heroImage = document.querySelector('#home-hero-image');
-        if (heroImage) {
-          const images = {
-            'default': '/assets/images/home/classic-hero.jpg',
-            'dark': '/assets/images/home/dark-hero.jpg', 
-            'earth': '/assets/images/home/earth-hero.jpg',
-            'ocean': '/assets/images/home/ocean-hero.jpg',
-            'sand': '/assets/images/home/sand-hero.jpg'
-          };
-          heroImage.src = images[theme] || images['default'];
-        }
-        
-        localStorage.setItem('theme', theme);
-      }
-      
-      // 初始化主题
-      const savedTheme = localStorage.getItem('theme');
-      if (savedTheme) {
-        setTheme(savedTheme);
-      } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        setTheme('dark');
-      }
-      
-      // 为按钮添加点击事件
-      document.addEventListener('DOMContentLoaded', function() {
-        const buttons = document.querySelectorAll('.theme-select__container button');
-        buttons.forEach((button, index) => {
-          const themes = ['default', 'dark', 'earth', 'ocean', 'sand'];
-          button.addEventListener('click', () => setTheme(themes[index]));
-        });
-      });
-    </script>
-  </div>
-)}
+<style>
+	.hero-section__section {
+		margin: var(--section-margin) auto;
+		min-height: clamp(90vh, 100vw, calc(100vh - var(--navbar-height)));
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		align-items: center;
+		gap: 1rem;
+	}
+	.hero-section__text {
+		justify-self: center;
+		max-width: 25rem;
+	}
+	.hero-btns__container {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+		margin-right: 1rem;
+	}
+	.hero-section__image {
+		display: flex;
+	}
+	.hero-section__image img {
+		width: 100%;
+		height: 100%;
+		max-height: 80vh;
+		object-fit: cover;
+		border-radius: var(--theme-shape-radius);
+	}
+	
+	/* 主题切换器样式 */
+	.theme-switcher-section {
+		margin: 2rem 0;
+	}
+	.theme-switcher__container {
+		display: grid;
+		grid-template-columns: repeat(5, 1fr);
+		gap: 1rem;
+	}
+	.theme-select__container {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+	}
+	.theme-select__container button {
+		display: inline-flex;
+		outline: none;
+		border: none;
+		background-color: transparent;
+		border: 2px solid transparent;
+		border-radius: 20rem;
+		padding: 8px;
+		cursor: pointer;
+		font-size: 1.5rem;
+		transition: border var(--theme-transition), box-shadow var(--theme-transition);
+		width: 50px;
+		height: 50px;
+		align-items: center;
+		justify-content: center;
+	}
+	.theme-select__container button:hover {
+		border: 2px solid var(--theme-primary);
+	}
+	.theme-select__container p {
+		font-size: var(--font-size-sm);
+		margin-top: 0.5rem;
+		text-align: center;
+	}
+	
+	@media (max-width: 768px) {
+		.hero-section__section {
+			grid-template-columns: 1fr;
+		}
+		.theme-switcher__container {
+			grid-template-columns: repeat(3, 1fr);
+			gap: 0.5rem;
+		}
+	}
+</style>
