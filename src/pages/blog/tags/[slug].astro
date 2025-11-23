@@ -10,11 +10,10 @@ export async function getStaticPaths() {
   
   const allTags = new Set<string>();
   
-  // 仅从 post 集合中收集标签 (不进行 toLowerCase())
+  // 收集标签
   posts.forEach(post => {
     if (post.data.tags && Array.isArray(post.data.tags)) {
       post.data.tags.forEach(tag => {
-        // 关键修复：不再将标签转为小写，而是使用原始标签名
         const trimmedTag = tag.trim();
         if (trimmedTag) {
           allTags.add(trimmedTag);
@@ -23,9 +22,10 @@ export async function getStaticPaths() {
     }
   });
   
-  // generateTagData 现在处理编码
+  // generateTagData 现在负责将英文标签转为小写，并编码中文标签
   const allTagsData = generateTagData(allTags); 
 
+  // 返回的 params.tag 已经是最终的 URL slug
   return allTagsData.map(tagItem => ({
     params: { tag: tagItem.slug }, 
     props: { rawTagTitle: tagItem.title }
@@ -36,9 +36,9 @@ export async function getStaticPaths() {
 const { tag: encodedTag } = Astro.params;
 const { rawTagTitle } = Astro.props; 
 
-// 关键修复：用于过滤的标签现在是原始标签名 (rawTagTitle)
-// 但过滤逻辑需要使用标准化后的版本进行匹配
+// 显示给用户的标签标题
 const tagToFilterForDisplay = decodeURIComponent(encodedTag) || rawTagTitle; 
+// 内部匹配使用的标准化小写标签
 const tagToFilterNormalized = tagToFilterForDisplay.trim().toLowerCase(); 
 
 const allPosts = await getCollection("post");
@@ -46,7 +46,7 @@ const taggedPosts = allPosts
   .filter(post => 
     post.data.tags && 
     Array.isArray(post.data.tags) && 
-    // 过滤时，对比 post 中的标准化标签
+    // 过滤时，对比 post 中的标准化标签 (实现大小写不敏感匹配)
     post.data.tags.some(postTag => postTag.trim().toLowerCase() === tagToFilterNormalized)
   )
   .sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf());
