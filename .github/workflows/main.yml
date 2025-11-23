@@ -2,8 +2,8 @@ name: 🚀 Deploy to GitHub Pages
 
 on:
   # 当代码推送到 main 分支时触发
-  push:
-    branches: main
+  #push:
+    #branches: main
   # 也可以手动触发
   workflow_dispatch:
 
