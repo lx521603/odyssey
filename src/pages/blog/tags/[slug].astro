@@ -1,4 +1,5 @@
 ---
+// 使用别名导入，确保路径解析最稳定
 import PageLayout from "@/layouts/Page.astro"; 
 import FeatureCard from "@/components/cards/FeatureCard.astro"; 
 import { generateTagData } from '@/utils/helpers.js'; 
@@ -10,7 +11,7 @@ export async function getStaticPaths() {
   
   const allTags = new Set<string>();
   
-  // 收集标签
+  // 收集所有唯一的标签
   posts.forEach(post => {
     if (post.data.tags && Array.isArray(post.data.tags)) {
       post.data.tags.forEach(tag => {
@@ -22,7 +23,7 @@ export async function getStaticPaths() {
     }
   });
   
-  // generateTagData 现在负责将英文标签转为小写，并编码中文标签
+  // generateTagData 负责将英文标签转为小写，并编码中文标签
   const allTagsData = generateTagData(allTags); 
 
   // 返回的 params.tag 已经是最终的 URL slug
@@ -36,7 +37,7 @@ export async function getStaticPaths() {
 const { tag: encodedTag } = Astro.params;
 const { rawTagTitle } = Astro.props; 
 
-// 显示给用户的标签标题
+// 显示给用户的标签标题 (解码后的原始标题)
 const tagToFilterForDisplay = decodeURIComponent(encodedTag) || rawTagTitle; 
 // 内部匹配使用的标准化小写标签
 const tagToFilterNormalized = tagToFilterForDisplay.trim().toLowerCase(); 
