@@ -1,0 +1,63 @@
+---
+// 导入布局、组件和辅助函数
+import Layout from '../../../layouts/Page.astro' // 假设布局文件路径
+import { Container } from '@components/odyssey-theme'; // 假设容器组件路径
+import { generateTagData } from '../../../utils/helpers.js' 
+
+// 1. 获取所有文章
+// 路径需要根据您的实际文章路径调整，这里沿用您 [slug].astro 中的相对路径
+const allPosts = await Astro.glob('../posts/*.mdx'); 
+
+// 2. 提取所有唯一的标签
+const allCategoriesUnique = new Set();
+allPosts.forEach(post => {
+  post.frontmatter.tags && post.frontmatter.tags.map(tag => {
+    allCategoriesUnique.add(tag);
+  })
+})
+
+// 3. 使用修复后的 generateTagData 生成包含 slug 的数据
+const allCategoriesData = generateTagData(allCategoriesUnique);
+
+const seo ={
+  title: `所有文章标签 | Astro Odyssey`,
+}
+---
+
+<Layout seo={seo}>
+  <Container narrow>
+    <section class="tag-list__section"> 
+      <h1 class="text-4xl font-extrabold mb-6 text-gray-900 dark:text-gray-100">
+        📚 所有标签
+      </h1>
+      
+      {/* 渲染标签列表 */}
+      <div class="flex flex-wrap gap-3">
+        {allCategoriesData.length > 0 ? (
+          allCategoriesData.map(tag => (
+            <a 
+              href={`/blog/tags/${tag.slug}`} 
+              class="inline-flex items-center px-4 py-2 border border-blue-600 dark:border-blue-400 text-sm font-medium rounded-full text-blue-600 dark:text-blue-400 bg-blue-50/50 dark:bg-blue-900/50 hover:bg-blue-100 dark:hover:bg-blue-800 transition-colors duration-200 shadow-sm"
+            >
+              {tag.title}
+              {/* 如果需要显示文章数量，可以修改 generateTagData 来计算 */}
+            </a>
+          ))
+        ) : (
+          <p class="text-gray-500 dark:text-gray-400">目前还没有任何标签。</p>
+        )}
+      </div>
+      
+    </section>
+  </Container>
+</Layout>
+
+<style>
+/* 确保内容在移动端和桌面端都美观 */
+.tag-list__section {
+  min-height: 60vh;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+</style>
+
