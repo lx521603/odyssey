@@ -1,4 +1,5 @@
 ---
+// 使用别名导入
 import PageLayout from "@/layouts/Page.astro"; 
 import { generateTagData } from '@/utils/helpers.js'; 
 import { getCollection } from "astro:content";
@@ -8,9 +9,8 @@ const posts = await getCollection("post");
 // 收集所有唯一的标签
 const allTags = new Set<string>();
 posts.forEach(post => {
-  if (post.data.tags && Array.isArray(post.data.tags)) {
+  if (post.data.tags && ArrayArray.isArray(post.data.tags)) {
     post.data.tags.forEach(tag => {
-      // 关键修复：不再将标签转为小写，而是使用原始标签名
       const trimmedTag = tag.trim();
       if (trimmedTag) {
         allTags.add(trimmedTag);
@@ -24,7 +24,7 @@ const allTagsData = generateTagData(allTags);
 
 // 计算每个标签的文章数量
 const tagsWithCount = allTagsData.map(tagItem => {
-  // 用于计数的标签需要标准化
+  // 用于计数的标签需要标准化 (实现大小写不敏感计数)
   const tagToMatch = tagItem.title.trim().toLowerCase();
 
   const count = posts.filter(post => 
