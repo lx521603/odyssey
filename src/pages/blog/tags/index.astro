@@ -9,19 +9,31 @@ const posts = await getCollection("post");
 const allTags = new Set<string>();
 posts.forEach(post => {
   if (post.data.tags && Array.isArray(post.data.tags)) {
-    post.data.tags.forEach(tag => allTags.add(tag));
+    post.data.tags.forEach(tag => {
+      // 关键修复：不再将标签转为小写，而是使用原始标签名
+      const trimmedTag = tag.trim();
+      if (trimmedTag) {
+        allTags.add(trimmedTag);
+      }
+    });
   }
 });
-
-// 移除对 works 的引用
 
 // 使用 generateTagData 生成可用于 URL 的 slug
 const allTagsData = generateTagData(allTags);
 
 // 计算每个标签的文章数量
 const tagsWithCount = allTagsData.map(tagItem => {
-  const count = posts.filter(post => post.data.tags && post.data.tags.includes(tagItem.title)).length;
-  // 移除 works 相关的计数
+  // 用于计数的标签需要标准化
+  const tagToMatch = tagItem.title.trim().toLowerCase();
+
+  const count = posts.filter(post => 
+    post.data.tags && 
+    Array.isArray(post.data.tags) && 
+    // 过滤时，对比 post 中的标准化标签
+    post.data.tags.some(postTag => postTag.trim().toLowerCase() === tagToMatch)
+  ).length;
+
   return { ...tagItem, count };
 }).filter(tagItem => tagItem.count > 0); // 只显示有文章的标签
 
