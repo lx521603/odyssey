@@ -1,12 +1,17 @@
 ---
-// 路径修复: 导入 src/layouts/base.astro 并使用 Base 组件
-import Base from "@/layouts/Base.astro"; 
-import BlogCard from "@/components/cards/BlogCard.astro";
-import WorkCard from "@/components/cards/WorkCard.astro";
+// 路径修正：从 src/pages/blog/tags/ 到 src/layouts/Page.astro 需要 3 级退回
+import PageLayout from "../../../layouts/Page.astro"; 
+
+// 路径修正：使用 FeatureCard 并修正路径到 src/components/cards/FeatureCard.astro
+import FeatureCard from "../../../components/cards/FeatureCard.astro"; 
+
+// 路径修正：从 src/pages/blog/tags/ 到 src/utils/helpers.js 需要 3 级退回
+import { generateTagData } from '../../../utils/helpers.js'; 
+
+// 保持原有的外部依赖路径，假设它们是配置好的别名或正确路径
 import { getCollection } from "astro:content";
 import works from "@/collections/featuredwork.json"; 
-// 路径修复：使用路径别名 @/utils/helpers.js
-import { generateTagData } from '@/utils/helpers.js'; 
+
 
 // --- 路径生成 ---
 export async function getStaticPaths() {
@@ -55,7 +60,7 @@ const hasBlogPosts = taggedPosts.length > 0;
 const hasWorks = taggedWorks.length > 0;
 ---
 
-<Base title={`${tagToFilter} - 标签`} description={`包含标签 "${tagToFilter}" 的文章和作品`}>
+<PageLayout title={`${tagToFilter} - 标签`} description={`包含标签 "${tagToFilter}" 的文章和作品`}>
   <div class="relative site-container z-20 w-full mx-auto mt-8 px-4 md:mt-10 lg:mt-12 xl:px-0">
     <div class="text-center mb-8">
       <h1 class="text-5xl font-bold mb-4 tracking-tight text-gray-900 dark:text-gray-50">标签: {tagToFilter}</h1>
@@ -72,7 +77,8 @@ const hasWorks = taggedWorks.length > 0;
         <h2 class="text-3xl font-bold mb-6 border-b pb-2 border-gray-200 dark:border-gray-700">相关文章</h2>
         <div class="grid gap-x-6 gap-y-10 md:grid-cols-2 xl:grid-cols-3">
           {taggedPosts.map((post, index) => (
-            <BlogCard
+            // 修正：使用 FeatureCard 替换 BlogCard
+            <FeatureCard
               content={{ ...post.data, ...post } as any}
               data-aos={Math.floor(index / 3) % 2 === 0 ? "fade-right-sm" : "fade-left-sm"}
               data-aos-delay={((index % 3) + 1) * 200}
@@ -87,7 +93,8 @@ const hasWorks = taggedWorks.length > 0;
         <h2 class="text-3xl font-bold mb-6 border-b pb-2 border-gray-200 dark:border-gray-700">相关作品</h2>
         <div class="space-y-8 md:space-y-10">
           {taggedWorks.map((work, index) => (
-            <WorkCard
+            // 修正：使用 FeatureCard 替换 WorkCard
+            <FeatureCard
               name={work.name}
               description={work.description}
               image={work.image}
@@ -110,5 +117,5 @@ const hasWorks = taggedWorks.length > 0;
       </div>
     )}
   </div>
-</Base>
+</PageLayout>
 
