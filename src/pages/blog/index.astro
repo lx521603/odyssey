@@ -3,7 +3,7 @@
 import Layout from '@/layouts/Layout.astro'; // 假设您的 Layout 组件路径
 import { getCollection } from 'astro:content';
 // 导入自定义的 helpers 文件，使用其中修复后的 generateTagData
-import { generateTagData } from '../../../utils/helpers.js'; 
+import { generateTagData } from '../../utils/helpers.js'; 
 
 // 1. 获取所有文章 (假设您的 Content Collection 名为 "post")
 const posts = await getCollection("post");
