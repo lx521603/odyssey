@@ -11,8 +11,7 @@ export function generateTagData(tagsSet) {
     .filter(tag => tag && tag.trim() !== '')
     .map(tag => ({
       title: tag,
-      // 关键修复：使用 encodeURIComponent 确保中文和包含空格的标签可以作为有效的 URL 路径片段
-      // 例如："人像" -> "%E4%BA%BA%E5%83%8F", "Odyssey Theme" -> "Odyssey%20Theme"
+      // 关键修复：使用 encodeURIComponent 确保中文标签可以作为有效的 URL 路径片段
       slug: encodeURIComponent(tag) 
     }));
 }
