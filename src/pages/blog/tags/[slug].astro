@@ -10,15 +10,20 @@ export async function getStaticPaths() {
   
   const allTags = new Set<string>();
   
-  // 仅从 post 集合中收集标签
+  // 仅从 post 集合中收集标签 (不进行 toLowerCase())
   posts.forEach(post => {
     if (post.data.tags && Array.isArray(post.data.tags)) {
-      post.data.tags.forEach(tag => allTags.add(tag));
+      post.data.tags.forEach(tag => {
+        // 关键修复：不再将标签转为小写，而是使用原始标签名
+        const trimmedTag = tag.trim();
+        if (trimmedTag) {
+          allTags.add(trimmedTag);
+        }
+      });
     }
   });
   
-  // 移除对 works 的引用
-  
+  // generateTagData 现在处理编码
   const allTagsData = generateTagData(allTags); 
 
   return allTagsData.map(tagItem => ({
@@ -31,24 +36,29 @@ export async function getStaticPaths() {
 const { tag: encodedTag } = Astro.params;
 const { rawTagTitle } = Astro.props; 
 
-const tagToFilter = decodeURIComponent(encodedTag) || rawTagTitle; 
+// 关键修复：用于过滤的标签现在是原始标签名 (rawTagTitle)
+// 但过滤逻辑需要使用标准化后的版本进行匹配
+const tagToFilterForDisplay = decodeURIComponent(encodedTag) || rawTagTitle; 
+const tagToFilterNormalized = tagToFilterForDisplay.trim().toLowerCase(); 
 
 const allPosts = await getCollection("post");
 const taggedPosts = allPosts
-  .filter(post => post.data.tags && Array.isArray(post.data.tags) && post.data.tags.includes(tagToFilter))
+  .filter(post => 
+    post.data.tags && 
+    Array.isArray(post.data.tags) && 
+    // 过滤时，对比 post 中的标准化标签
+    post.data.tags.some(postTag => postTag.trim().toLowerCase() === tagToFilterNormalized)
+  )
   .sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf());
 
-// 移除对 taggedWorks 的引用
-
 const hasBlogPosts = taggedPosts.length > 0;
-//  যেহেতু works is removed, this should always be false
 const hasWorks = false; 
 ---
 
-<PageLayout title={`${tagToFilter} - 标签`} description={`包含标签 "${tagToFilter}" 的文章`}>
+<PageLayout title={`${tagToFilterForDisplay} - 标签`} description={`包含标签 "${tagToFilterForDisplay}" 的文章`}>
   <div class="relative site-container z-20 w-full mx-auto mt-8 px-4 md:mt-10 lg:mt-12 xl:px-0">
     <div class="text-center mb-8">
-      <h1 class="text-5xl font-bold mb-4 tracking-tight text-gray-900 dark:text-gray-50">标签: {tagToFilter}</h1>
+      <h1 class="text-5xl font-bold mb-4 tracking-tight text-gray-900 dark:text-gray-50">标签: {tagToFilterForDisplay}</h1>
       <p class="text-lg text-gray-600 dark:text-gray-400">
         {taggedPosts.length} 篇相关文章
       </p>
@@ -69,11 +79,9 @@ const hasWorks = false;
       </section>
     )}
     
-    {/* 移除对 works/taggedWorks 的渲染 */}
-
     {!hasBlogPosts && (
       <div class="text-center text-gray-500 dark:text-gray-400 py-12">
-        <p>未找到包含标签 "{tagToFilter}" 的内容。</p>
+        <p>未找到包含标签 "{tagToFilterForDisplay}" 的内容。</p>
       </div>
     )}
   </div>
