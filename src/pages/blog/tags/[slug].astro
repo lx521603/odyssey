@@ -1,16 +1,8 @@
 ---
-// Layout 路径：从 src/pages/blog/tags/ 到 src/layouts/Page.astro (3 级退回)
-import PageLayout from "../../../layouts/Page.astro"; 
-
-// FeatureCard 路径：从 src/pages/blog/tags/ 到 src/components/cards/FeatureCard.astro (3 级退回)
-// 我们使用 FeatureCard，因为它在您的 cards 目录下是唯一存在的。
-import FeatureCard from "../../../components/cards/FeatureCard.astro"; 
-
-// Utils 路径：从 src/pages/blog/tags/ 到 src/utils/helpers.js (3 级退回)
-import { generateTagData } from '../../../utils/helpers.js'; 
-
+import PageLayout from "@/layouts/Page.astro"; 
+import FeatureCard from "@/components/cards/FeatureCard.astro"; 
+import { generateTagData } from '@/utils/helpers.js'; 
 import { getCollection } from "astro:content";
-
 
 // --- 路径生成 ---
 export async function getStaticPaths() {
@@ -18,18 +10,14 @@ export async function getStaticPaths() {
   
   const allTags = new Set<string>();
   
+  // 仅从 post 集合中收集标签
   posts.forEach(post => {
     if (post.data.tags && Array.isArray(post.data.tags)) {
       post.data.tags.forEach(tag => allTags.add(tag));
     }
   });
   
-  // works 已经被正确导入
-  works.forEach((work: any) => { 
-    if (work.tags && Array.isArray(work.tags) && work.isShow !== false) {
-      work.tags.forEach(tag => allTags.add(tag));
-    }
-  });
+  // 移除对 works 的引用
   
   const allTagsData = generateTagData(allTags); 
 
@@ -50,22 +38,19 @@ const taggedPosts = allPosts
   .filter(post => post.data.tags && Array.isArray(post.data.tags) && post.data.tags.includes(tagToFilter))
   .sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf());
 
-const taggedWorks = works
-  .filter(work => work.tags && Array.isArray(work.tags) && work.tags.includes(tagToFilter) && work.isShow !== false);
+// 移除对 taggedWorks 的引用
 
 const hasBlogPosts = taggedPosts.length > 0;
-const hasWorks = taggedWorks.length > 0;
+//  যেহেতু works is removed, this should always be false
+const hasWorks = false; 
 ---
 
-<PageLayout title={`${tagToFilter} - 标签`} description={`包含标签 "${tagToFilter}" 的文章和作品`}>
+<PageLayout title={`${tagToFilter} - 标签`} description={`包含标签 "${tagToFilter}" 的文章`}>
   <div class="relative site-container z-20 w-full mx-auto mt-8 px-4 md:mt-10 lg:mt-12 xl:px-0">
     <div class="text-center mb-8">
       <h1 class="text-5xl font-bold mb-4 tracking-tight text-gray-900 dark:text-gray-50">标签: {tagToFilter}</h1>
       <p class="text-lg text-gray-600 dark:text-gray-400">
-        {taggedPosts.length + taggedWorks.length} 个包含标签 "{tagToFilter}" 的内容
-        {hasBlogPosts && hasWorks && ` (${taggedPosts.length} 篇文章, ${taggedWorks.length} 个作品)`}
-        {hasBlogPosts && !hasWorks && ` (${taggedPosts.length} 篇文章)`}
-        {!hasBlogPosts && hasWorks && ` (${taggedWorks.length} 个作品)`}
+        {taggedPosts.length} 篇相关文章
       </p>
     </div>
 
@@ -83,30 +68,10 @@ const hasWorks = taggedWorks.length > 0;
         </div>
       </section>
     )}
+    
+    {/* 移除对 works/taggedWorks 的渲染 */}
 
-    {hasWorks && (
-      <section class="mb-12">
-        <h2 class="text-3xl font-bold mb-6 border-b pb-2 border-gray-200 dark:border-gray-700">相关作品</h2>
-        <div class="space-y-8 md:space-y-10">
-          {taggedWorks.map((work, index) => (
-            <FeatureCard
-              name={work.name}
-              description={work.description}
-              image={work.image}
-              url={work.url}
-              tags={work.tags}
-              video={(work as any).video ?? undefined} 
-              isShow={work.isShow}
-              layout="featured"
-              index={index}
-              mediaRatio="auto"
-            />
-          ))}
-        </div>
-      </section>
-    )}
-
-    {!hasBlogPosts && !hasWorks && (
+    {!hasBlogPosts && (
       <div class="text-center text-gray-500 dark:text-gray-400 py-12">
         <p>未找到包含标签 "{tagToFilter}" 的内容。</p>
       </div>
