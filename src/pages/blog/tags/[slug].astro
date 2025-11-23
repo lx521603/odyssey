@@ -8,22 +8,22 @@ export async function getStaticPaths() {
   const postsArray = Object.values(allPosts);
   
   const sortedPosts = postsArray.sort((a, b) => new Date(b.frontmatter.date).valueOf() - new Date(a.frontmatter.date).valueOf());
-  const allCategoriesUnique = new Set();
+  const allTagsUnique = new Set(); // 修复：变量名改为 allTagsUnique
   
   sortedPosts.forEach(post => {
     if (post.frontmatter.tags) {
       post.frontmatter.tags.forEach(tag => {
         if (tag && tag.trim() !== '') {
-          allCategoriesUnique.add(tag);
+          allTagsUnique.add(tag); // 修复：使用 allTagsUnique
         }
       });
     }
   })
   
-  const allCategoriesData = generateTagData(allCategoriesUnique);
+  const allTagsData = generateTagData(allTagsUnique); // 修复：变量名改为 allTagsData
   
   // 过滤掉空的slug
-  const validPaths = allCategoriesData
+  const validPaths = allTagsData
     .filter(tag => tag.slug && tag.slug.trim() !== '')
     .map((tag) => {
       const posts = sortedPosts.filter((post) => 
@@ -38,7 +38,6 @@ export async function getStaticPaths() {
       };
     });
   
-  console.log('Generated paths:', validPaths.map(p => p.params.slug));
   return validPaths;
 }
 
