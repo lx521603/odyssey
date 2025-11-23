@@ -1,79 +1,56 @@
 ---
-// --- 标签列表首页: /blog/tags ---
-import Layout from '@/layouts/Base.astro'; // 假设您的 Layout 组件路径
-import { getCollection } from 'astro:content';
-// 导入自定义的 helpers 文件，使用其中修复后的 generateTagData
-import { generateTagData } from '../../utils/helpers.js'; 
+import { parse, isBefore } from 'date-fns';
+import {
+	Container,
+	TextCardSection,
+	BlogPostsList,
+} from '@components/odyssey-theme';
+import Layout from '../../layouts/Page.astro';
+import NewsletterForm from '../../components/forms/NewsletterForm.astro';
 
-// 1. 获取所有文章 (假设您的 Content Collection 名为 "post")
-const posts = await getCollection("post");
+const posts = await Astro.glob('./posts/*.mdx').then(posts =>
+	posts
+		.map(({ frontmatter, url }) => ({
+			title: frontmatter.title,
+			description: frontmatter.description,
+			authors: frontmatter.authors,
+			publishDate: parse(frontmatter.publishDate, 'MMMM d, yyyy', new Date()),
+			featuredImage: frontmatter.featuredImage,
+			excerpt: frontmatter.excerpt,
+			href: url,
+		}))
+		.sort((a, b) => {
+			if (isBefore(a.publishDate, b.publishDate)) return 1;
+			if (isBefore(b.publishDate, a.publishDate)) return -1;
+			return 0;
+		})
+);
 
-// 2. 提取所有唯一的标签
-const allTags = new Set<string>();
-posts.forEach(post => {
-  if (post.data.tags && Array.isArray(post.data.tags)) {
-    post.data.tags.forEach(tag => allTags.add(tag));
-  }
-});
-
-// 3. 使用 generateTagData 生成包含 slug 的数据
-// 过滤掉空标签，并为中文/含空格标签生成 URI 编码的 slug
-const allTagsData = generateTagData(allTags);
-
-// 4. 计算每个标签的文章数量，用于显示 (可选，但推荐)
-const taggedCounts = allTagsData.map(tag => {
-    const count = posts.filter(post => 
-        post.data.tags && Array.isArray(post.data.tags) && post.data.tags.includes(tag.title)
-    ).length;
-    return { ...tag, count };
-});
-
-const seoTitle = '所有文章标签';
-const seoDescription = `博客中使用的所有标签列表，共 ${allTags.size} 个标签。`;
+const seo = {
+	title: 'Blog | Astro Odyssey Theme',
+	description: 'Astro Odyssey Theme Blog Page',
+};
 ---
 
-<Layout title={seoTitle} description={seoDescription}>
-  <div class="site-container w-full mx-auto px-4 py-12 md:py-20">
-    <div class="text-center mb-10">
-      <h1 class="text-5xl font-extrabold tracking-tight text-gray-900 dark:text-gray-50 mb-3">
-        文章标签
-      </h1>
-      <p class="text-xl text-gray-600 dark:text-gray-400">
-        探索 {allTags.size} 个不同的主题和分类
-      </p>
-    </div>
-
-    <section class="max-w-4xl mx-auto">
-      {taggedCounts.length > 0 ? (
-        <div class="flex flex-wrap justify-center gap-4">
-          {taggedCounts.sort((a, b) => b.count - a.count).map(tag => (
-            <a 
-              href={`/blog/tags/${tag.slug}`} 
-              class="
-                inline-flex items-center 
-                bg-white dark:bg-gray-800 
-                hover:bg-blue-50 dark:hover:bg-blue-900 
-                border border-gray-200 dark:border-gray-700 
-                text-gray-700 dark:text-gray-200 
-                px-5 py-2.5 
-                rounded-full shadow-md 
-                transition-all duration-300 
-                transform hover:scale-105
-                focus:outline-none focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-700
-              "
-              aria-label={`查看所有关于 ${tag.title} 的 ${tag.count} 篇文章`}
-            >
-              <span class="text-lg font-medium mr-2">{tag.title}</span>
-              <span class="text-sm font-semibold text-blue-600 dark:text-blue-400">({tag.count})</span>
-            </a>
-          ))}
-        </div>
-      ) : (
-        <div class="text-center py-16">
-          <p class="text-xl text-gray-500">目前没有找到任何标签。</p>
-        </div>
-      )}
-    </section>
-  </div>
+<Layout {seo}>
+	<Container>
+		<TextCardSection>
+			<h1>Odyssey Blog</h1>
+			<p>
+				View our blog to stay up to date on the latest news about our business.
+				Want to be the first to hear about a new blog post? Join our newsletter!
+			</p>
+			<NewsletterForm />
+		</TextCardSection>
+		<section class="blog-posts-list__section">
+			<h2>Recent Posts</h2>
+			<BlogPostsList posts={posts} />
+		</section>
+	</Container>
 </Layout>
 
+<style>
+	.blog-posts-list__section {
+		margin: var(--section-margin) auto;
+	}
+</style>
