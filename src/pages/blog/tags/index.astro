@@ -48,7 +48,6 @@ const seoDescription = `博客中使用的所有标签列表，共 ${allTags.siz
         <div class="flex flex-wrap justify-center gap-4">
           {taggedCounts.sort((a, b) => b.count - a.count).map(tag => (
             <a 
-              // 修正链接：确保链接到 /blog/tags/
               href={`/blog/tags/${tag.slug}`} 
               class="
                 inline-flex items-center 
