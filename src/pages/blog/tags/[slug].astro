@@ -1,16 +1,18 @@
 ---
-// 路径修正：从 src/pages/blog/tags/ 到 src/layouts/Page.astro 需要 3 级退回
+// Layout 路径：从 src/pages/blog/tags/ 到 src/layouts/Page.astro (3 级退回)
 import PageLayout from "../../../layouts/Page.astro"; 
 
-// 路径修正：使用 FeatureCard 并修正路径到 src/components/cards/FeatureCard.astro
+// FeatureCard 路径：从 src/pages/blog/tags/ 到 src/components/cards/FeatureCard.astro (3 级退回)
 import FeatureCard from "../../../components/cards/FeatureCard.astro"; 
 
-// 路径修正：从 src/pages/blog/tags/ 到 src/utils/helpers.js 需要 3 级退回
+// Utils 路径：从 src/pages/blog/tags/ 到 src/utils/helpers.js (3 级退回)
 import { generateTagData } from '../../../utils/helpers.js'; 
 
-// 保持原有的外部依赖路径，假设它们是配置好的别名或正确路径
+// JSON 数据路径：从 src/pages/blog/tags/ 到 src/collections/featuredwork.json (3 级退回)
+import works from "../../../collections/featuredwork.json"; 
+
+
 import { getCollection } from "astro:content";
-import works from "@/collections/featuredwork.json"; 
 
 
 // --- 路径生成 ---
@@ -25,27 +27,25 @@ export async function getStaticPaths() {
     }
   });
   
+  // works 已经被正确导入
   works.forEach((work: any) => { 
     if (work.tags && Array.isArray(work.tags) && work.isShow !== false) {
       work.tags.forEach(tag => allTags.add(tag));
     }
   });
   
-  const allTagsData = generateTagData(allTags); // 使用修复后的函数
+  const allTagsData = generateTagData(allTags); 
 
   return allTagsData.map(tagItem => ({
-    // 关键修复：使用 generateTagData 生成的编码后的 slug
     params: { tag: tagItem.slug }, 
-    // props 传递原始标签名 (title)
     props: { rawTagTitle: tagItem.title }
   }));
 }
 
 // --- 页面内容获取 ---
 const { tag: encodedTag } = Astro.params;
-const { rawTagTitle } = Astro.props; // 获取原始标签名
+const { rawTagTitle } = Astro.props; 
 
-// 确保用于过滤的标签是解码后的原始标签名
 const tagToFilter = decodeURIComponent(encodedTag) || rawTagTitle; 
 
 const allPosts = await getCollection("post");
@@ -77,7 +77,6 @@ const hasWorks = taggedWorks.length > 0;
         <h2 class="text-3xl font-bold mb-6 border-b pb-2 border-gray-200 dark:border-gray-700">相关文章</h2>
         <div class="grid gap-x-6 gap-y-10 md:grid-cols-2 xl:grid-cols-3">
           {taggedPosts.map((post, index) => (
-            // 修正：使用 FeatureCard 替换 BlogCard
             <FeatureCard
               content={{ ...post.data, ...post } as any}
               data-aos={Math.floor(index / 3) % 2 === 0 ? "fade-right-sm" : "fade-left-sm"}
@@ -93,7 +92,6 @@ const hasWorks = taggedWorks.length > 0;
         <h2 class="text-3xl font-bold mb-6 border-b pb-2 border-gray-200 dark:border-gray-700">相关作品</h2>
         <div class="space-y-8 md:space-y-10">
           {taggedWorks.map((work, index) => (
-            // 修正：使用 FeatureCard 替换 WorkCard
             <FeatureCard
               name={work.name}
               description={work.description}
