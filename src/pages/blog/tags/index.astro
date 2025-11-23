@@ -1,63 +1,80 @@
 ---
-// 导入布局、组件和辅助函数
-import Layout from '../../layouts/Page.astro' // 假设布局文件路径
-import { Container } from '@components/odyssey-theme'; // 假设容器组件路径
-import { generateTagData } from '../../../utils/helpers.js' 
+// --- 标签列表首页: /blog/tags ---
+// 路径修复: 导入 src/layouts/base.astro 并使用 Base 组件
+import Base from '../../layouts/base.astro'; 
+import { getCollection } from 'astro:content';
+// 路径修复：使用路径别名 @/utils/helpers.js
+import { generateTagData } from '@/utils/helpers.js'; 
 
-// 1. 获取所有文章
-// 路径需要根据您的实际文章路径调整，这里沿用您 [slug].astro 中的相对路径
-const allPosts = await Astro.glob('../posts/*.mdx'); 
+// 1. 获取所有文章 (使用 getCollection 统一获取方式)
+const posts = await getCollection("post");
 
 // 2. 提取所有唯一的标签
-const allCategoriesUnique = new Set();
-allPosts.forEach(post => {
-  post.frontmatter.tags && post.frontmatter.tags.map(tag => {
-    allCategoriesUnique.add(tag);
-  })
-})
+const allTags = new Set<string>();
+posts.forEach(post => {
+  if (post.data.tags && Array.isArray(post.data.tags)) {
+    post.data.tags.forEach(tag => allTags.add(tag));
+  }
+});
 
-// 3. 使用修复后的 generateTagData 生成包含 slug 的数据
-const allCategoriesData = generateTagData(allCategoriesUnique);
+// 3. 使用 generateTagData 生成包含 slug 的数据
+const allTagsData = generateTagData(allTags);
 
-const seo ={
-  title: `所有文章标签 | Astro Odyssey`,
-}
+// 4. 计算每个标签的文章数量，用于显示 
+const taggedCounts = allTagsData.map(tag => {
+    const count = posts.filter(post => 
+        post.data.tags && Array.isArray(post.data.tags) && post.data.tags.includes(tag.title)
+    ).length;
+    return { ...tag, count };
+});
+
+const seoTitle = '所有文章标签';
+const seoDescription = `博客中使用的所有标签列表，共 ${allTags.size} 个标签。`;
 ---
 
-<Layout seo={seo}>
-  <Container narrow>
-    <section class="tag-list__section"> 
-      <h1 class="text-4xl font-extrabold mb-6 text-gray-900 dark:text-gray-100">
-        📚 所有标签
+<Base title={seoTitle} description={seoDescription}>
+  <div class="site-container w-full mx-auto px-4 py-12 md:py-20">
+    <div class="text-center mb-10">
+      <h1 class="text-5xl font-extrabold tracking-tight text-gray-900 dark:text-gray-50 mb-3">
+        文章标签
       </h1>
-      
-      {/* 渲染标签列表 */}
-      <div class="flex flex-wrap gap-3">
-        {allCategoriesData.length > 0 ? (
-          allCategoriesData.map(tag => (
-            <a 
-              href={`/blog/tags/${tag.slug}`} 
-              class="inline-flex items-center px-4 py-2 border border-blue-600 dark:border-blue-400 text-sm font-medium rounded-full text-blue-600 dark:text-blue-400 bg-blue-50/50 dark:bg-blue-900/50 hover:bg-blue-100 dark:hover:bg-blue-800 transition-colors duration-200 shadow-sm"
-            >
-              {tag.title}
-              {/* 如果需要显示文章数量，可以修改 generateTagData 来计算 */}
-            </a>
-          ))
-        ) : (
-          <p class="text-gray-500 dark:text-gray-400">目前还没有任何标签。</p>
-        )}
-      </div>
-      
-    </section>
-  </Container>
-</Layout>
+      <p class="text-xl text-gray-600 dark:text-gray-400">
+        探索 {allTags.size} 个不同的主题和分类
+      </p>
+    </div>
 
-<style>
-/* 确保内容在移动端和桌面端都美观 */
-.tag-list__section {
-  min-height: 60vh;
-  padding-top: 2rem;
-  padding-bottom: 2rem;
-}
-</style>
+    <section class="max-w-4xl mx-auto">
+      {taggedCounts.length > 0 ? (
+        <div class="flex flex-wrap justify-center gap-4">
+          {taggedCounts.sort((a, b) => b.count - a.count).map(tag => (
+            <a 
+              // 修正链接：确保链接到 /blog/tags/
+              href={`/blog/tags/${tag.slug}`} 
+              class="
+                inline-flex items-center 
+                bg-white dark:bg-gray-800 
+                hover:bg-blue-50 dark:hover:bg-blue-900 
+                border border-gray-200 dark:border-gray-700 
+                text-gray-700 dark:text-gray-200 
+                px-5 py-2.5 
+                rounded-full shadow-md 
+                transition-all duration-300 
+                transform hover:scale-105
+                focus:outline-none focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-700
+              "
+              aria-label={`查看所有关于 ${tag.title} 的 ${tag.count} 篇文章`}
+            >
+              <span class="text-lg font-medium mr-2">{tag.title}</span>
+              <span class="text-sm font-semibold text-blue-600 dark:text-blue-400">({tag.count})</span>
+            </a>
+          ))}
+        </div>
+      ) : (
+        <div class="text-center py-16">
+          <p class="text-xl text-gray-500">目前没有找到任何标签。</p>
+        </div>
+      )}
+    </section>
+  </div>
+</Base>
 
