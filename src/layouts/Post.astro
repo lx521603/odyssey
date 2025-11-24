@@ -108,21 +108,23 @@ const seo = {
   .post-tag {
     display: inline-block;
     padding: 0.5rem 1rem;
-    background: linear-gradient(135deg, var(--theme-primary) 0%, var(--theme-primary-light) 100%);
-    color: white;
+    background: var(--theme-surface-2);
+    color: var(--theme-on-surface-2);
     text-decoration: none;
     border-radius: 8px;
     font-size: 0.85rem;
     font-weight: 500;
     transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(var(--theme-primary-rgb, 59, 130, 246), 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    border: 1px solid var(--theme-border);
   }
   
   .post-tag:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(var(--theme-primary-rgb, 59, 130, 246), 0.3);
-    background: linear-gradient(135deg, var(--theme-primary-dark) 0%, var(--theme-primary) 100%);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    background: var(--theme-primary);
+    color: var(--theme-on-primary);
+    border-color: var(--theme-primary);
   }
   
   /* 文章标题样式 */
