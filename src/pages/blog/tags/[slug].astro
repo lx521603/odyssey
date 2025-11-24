@@ -1,90 +1,161 @@
 ---
-// 使用别名导入，确保路径解析最稳定
-import PageLayout from "@/layouts/Page.astro"; 
-import FeatureCard from "@/components/cards/FeatureCard.astro"; 
-import { generateTagData } from '@/utils/helpers.js'; 
-import { getCollection } from "astro:content";
+import Layout from '../../../layouts/Page.astro'
+import { Container } from '@components/odyssey-theme';
+import {generateTagData} from '../../../utils/helpers.js'
 
-// --- 路径生成 ---
 export async function getStaticPaths() {
-  const posts = await getCollection("post");
+  const allPosts = await Astro.glob('../posts/*.mdx');
+  const sortedPosts = allPosts.sort((a, b) => new Date(b.frontmatter.date).valueOf() - new Date(a.frontmatter.date).valueOf());
+  const allCategoriesUnique = new Set();
   
-  const allTags = new Set<string>();
+  sortedPosts.forEach(post => {
+    post.frontmatter.tags && post.frontmatter.tags.map(tag => {
+      allCategoriesUnique.add(tag);
+    })
+  })
   
-  // 收集所有唯一的标签
-  posts.forEach(post => {
-    if (post.data.tags && Array.isArray(post.data.tags)) {
-      post.data.tags.forEach(tag => {
-        const trimmedTag = tag.trim();
-        if (trimmedTag) {
-          allTags.add(trimmedTag);
-        }
-      });
-    }
+  const allCategoriesData = generateTagData(allCategoriesUnique);
+  return allCategoriesData.map((tag) => {
+    const posts = sortedPosts.filter((post) => post.frontmatter.tags.includes(tag.title))
+    return {
+      params: {slug: tag.slug}, 
+      props: {
+        tag: tag.title, 
+        posts: posts
+      }
+    };
   });
-  
-  // generateTagData 负责将英文标签转为小写，并编码中文标签
-  const allTagsData = generateTagData(allTags); 
-
-  // 返回的 params.tag 已经是最终的 URL slug
-  return allTagsData.map(tagItem => ({
-    params: { tag: tagItem.slug }, 
-    props: { rawTagTitle: tagItem.title }
-  }));
 }
 
-// --- 页面内容获取 ---
-const { tag: encodedTag } = Astro.params;
-const { rawTagTitle } = Astro.props; 
+const {tag, posts} = Astro.props;
 
-// 显示给用户的标签标题 (解码后的原始标题)
-const tagToFilterForDisplay = decodeURIComponent(encodedTag) || rawTagTitle; 
-// 内部匹配使用的标准化小写标签
-const tagToFilterNormalized = tagToFilterForDisplay.trim().toLowerCase(); 
-
-const allPosts = await getCollection("post");
-const taggedPosts = allPosts
-  .filter(post => 
-    post.data.tags && 
-    Array.isArray(post.data.tags) && 
-    // 过滤时，对比 post 中的标准化标签 (实现大小写不敏感匹配)
-    post.data.tags.some(postTag => postTag.trim().toLowerCase() === tagToFilterNormalized)
-  )
-  .sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf());
-
-const hasBlogPosts = taggedPosts.length > 0;
-const hasWorks = false; 
+const seo ={
+  title: `${tag} - 标签`,
+  description: `包含"${tag}"标签的所有文章`,
+}
 ---
 
-<PageLayout title={`${tagToFilterForDisplay} - 标签`} description={`包含标签 "${tagToFilterForDisplay}" 的文章`}>
-  <div class="relative site-container z-20 w-full mx-auto mt-8 px-4 md:mt-10 lg:mt-12 xl:px-0">
-    <div class="text-center mb-8">
-      <h1 class="text-5xl font-bold mb-4 tracking-tight text-gray-900 dark:text-gray-50">标签: {tagToFilterForDisplay}</h1>
-      <p class="text-lg text-gray-600 dark:text-gray-400">
-        {taggedPosts.length} 篇相关文章
-      </p>
-    </div>
-
-    {hasBlogPosts && (
-      <section class="mb-12">
-        <h2 class="text-3xl font-bold mb-6 border-b pb-2 border-gray-200 dark:border-gray-700">相关文章</h2>
-        <div class="grid gap-x-6 gap-y-10 md:grid-cols-2 xl:grid-cols-3">
-          {taggedPosts.map((post, index) => (
-            <FeatureCard
-              content={{ ...post.data, ...post } as any}
-              data-aos={Math.floor(index / 3) % 2 === 0 ? "fade-right-sm" : "fade-left-sm"}
-              data-aos-delay={((index % 3) + 1) * 200}
-            />
-          ))}
-        </div>
-      </section>
-    )}
-    
-    {!hasBlogPosts && (
-      <div class="text-center text-gray-500 dark:text-gray-400 py-12">
-        <p>未找到包含标签 "{tagToFilterForDisplay}" 的内容。</p>
+<Layout seo={seo}>
+  <Container>
+    <section class="tag-page"> 
+      <div class="tag-header">
+        <h1 class="tag-title">标签: {tag}</h1>
+        <p class="tag-count">共 {posts.length} 篇文章</p>
       </div>
-    )}
-  </div>
-</PageLayout>
+      
+      <div class="posts-list">
+        {posts.length > 0 ? (
+          posts.map(post => (
+            <article class="post-card">
+              <a href={post.url} class="post-link">
+                <h2 class="post-title">{post.frontmatter.title}</h2>
+                {post.frontmatter.description && (
+                  <p class="post-description">{post.frontmatter.description}</p>
+                )}
+                <time class="post-date">
+                  {new Date(post.frontmatter.date).toLocaleDateString('zh-CN')}
+                </time>
+              </a>
+            </article>
+          ))
+        ) : (
+          <div class="no-posts">
+            <p>暂无包含此标签的文章</p>
+          </div>
+        )}
+      </div>
+    </section>
+  </Container>
+</Layout>
 
+<style>
+.tag-page {
+  min-height: 60vh;
+  padding: 2rem 0;
+}
+
+.tag-header {
+  text-align: center;
+  margin-bottom: 3rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--theme-border);
+}
+
+.tag-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--theme-text);
+  margin-bottom: 0.5rem;
+}
+
+.tag-count {
+  font-size: 1.1rem;
+  color: var(--theme-text-light);
+  margin: 0;
+}
+
+.posts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.post-card {
+  background: var(--theme-surface);
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+  border: 1px solid var(--theme-border);
+}
+
+.post-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  border-color: var(--theme-primary);
+}
+
+.post-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.post-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--theme-text);
+  margin: 0 0 0.75rem 0;
+  line-height: 1.4;
+}
+
+.post-description {
+  color: var(--theme-text-light);
+  margin: 0 0 1rem 0;
+  line-height: 1.5;
+  font-size: 0.95rem;
+}
+
+.post-date {
+  font-size: 0.875rem;
+  color: var(--theme-text-lighter);
+  margin: 0;
+}
+
+.no-posts {
+  text-align: center;
+  padding: 3rem;
+  color: var(--theme-text-light);
+}
+
+@media (max-width: 768px) {
+  .tag-title {
+    font-size: 2rem;
+  }
+  
+  .post-card {
+    padding: 1.25rem;
+  }
+}
+</style>
