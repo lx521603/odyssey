@@ -1,0 +1,179 @@
+---
+import Layout from '../../../layouts/Page.astro'
+import { Container } from '@components/odyssey-theme';
+import {generateTagData} from '../../../utils/helpers.js'
+
+const allPosts = await Astro.glob('../posts/*.mdx');
+const allTags = new Set();
+
+allPosts.forEach(post => {
+  post.frontmatter.tags && post.frontmatter.tags.forEach(tag => {
+    allTags.add(tag);
+  })
+})
+
+const tagsData = generateTagData(allTags);
+const tagsWithCount = tagsData.map(tag => {
+  const count = allPosts.filter(post => 
+    post.frontmatter.tags && post.frontmatter.tags.includes(tag.title)
+  ).length;
+  return { ...tag, count };
+}).sort((a, b) => b.count - a.count);
+
+const seo = {
+  title: '文章标签',
+  description: '浏览所有文章标签',
+}
+---
+
+<Layout seo={seo}>
+  <Container>
+    <section class="tags-page">
+      <div class="page-header">
+        <h1 class="page-title">文章标签</h1>
+        <p class="page-description">
+          共 {tagsWithCount.length} 个标签，{allPosts.length} 篇文章
+        </p>
+      </div>
+
+      <div class="tags-container">
+        {tagsWithCount.length > 0 ? (
+          <div class="tags-grid">
+            {tagsWithCount.map(tag => (
+              <a 
+                href={`/blog/tags/${tag.slug}`} 
+                class="tag-card"
+              >
+                <span class="tag-name">{tag.title}</span>
+                <span class="tag-count">{tag.count}</span>
+              </a>
+            ))}
+          </div>
+        ) : (
+          <div class="no-tags">
+            <p>暂无标签</p>
+          </div>
+        )}
+      </div>
+    </section>
+  </Container>
+</Layout>
+
+<style>
+.tags-page {
+  min-height: 70vh;
+  padding: 2rem 0;
+}
+
+.page-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.page-title {
+  font-size: 3rem;
+  font-weight: 700;
+  color: var(--theme-text);
+  margin-bottom: 0.5rem;
+}
+
+.page-description {
+  font-size: 1.1rem;
+  color: var(--theme-text-light);
+  margin: 0;
+}
+
+.tags-container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.tags-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.tag-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--theme-surface);
+  border: 1px solid var(--theme-border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.tag-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(var(--theme-primary-rgb), 0.1), transparent);
+  transition: left 0.6s;
+}
+
+.tag-card:hover::before {
+  left: 100%;
+}
+
+.tag-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+  border-color: var(--theme-primary);
+  background: var(--theme-surface-hover);
+}
+
+.tag-name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--theme-text);
+}
+
+.tag-count {
+  background: var(--theme-primary);
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.no-tags {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: var(--theme-text-light);
+}
+
+@media (max-width: 768px) {
+  .page-title {
+    font-size: 2.25rem;
+  }
+  
+  .tags-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .tag-card {
+    padding: 1.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .tags-page {
+    padding: 1rem 0;
+  }
+  
+  .page-header {
+    margin-bottom: 2rem;
+  }
+}
+</style>

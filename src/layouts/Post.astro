@@ -11,34 +11,62 @@ if(tags && tags.length > 0){
   allTagsData = generateTagData(tags);
 }
 
+// 格式化日期为中文
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  return date.toLocaleDateString('zh-CN', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+};
+
 const seo = {
-	title,
-	description,
+  title,
+  description,
   publishDate,
-	canonicalURL,
-	image: featuredImage,
+  canonicalURL,
+  image: featuredImage,
 };
 ---
 <Layout seo={seo}> 
   <div class="post-header__container"> 
-    <ul class="post-tags__list">
-      {allTagsData.map(tag => (
-        <li class="post-tags__tag">
-          <a href={`/blog/tags/${tag.slug}`}>
-            {tag.title}
-          </a>
-        </li>
-      ))}
-    </ul>
-    <h1>{title}</h1>
-    <p class="post-layout__date">
-      <time><em>{publishDate}</em></time>
-    </p>
-    {featuredImage && <img class="post-layout__img" src={featuredImage} alt={title} />}
+    <!-- 优化的标签区域 -->
+    {allTagsData.length > 0 && (
+      <div class="post-tags">
+        <span class="tags-label">文章标签：</span>
+        <div class="tags-container">
+          {allTagsData.map(tag => (
+            <a href={`/blog/tags/${tag.slug}`} class="post-tag">
+              {tag.title}
+            </a>
+          ))}
+        </div>
+      </div>
+    )}
+    
+    <h1 class="post-title">{title}</h1>
+    
+    <div class="post-meta">
+      <time class="post-date">{formatDate(publishDate)}</time>
+      {allTagsData.length > 0 && (
+        <span class="meta-separator">•</span>
+      )}
+      {allTagsData.length > 0 && (
+        <span class="tags-count">{allTagsData.length} 个标签</span>
+      )}
+    </div>
+    
+    {featuredImage && (
+      <div class="featured-image-container">
+        <img class="post-featured-image" src={featuredImage} alt={title} />
+      </div>
+    )}
   </div>
+  
   <Container narrow>  
-    <article id="article">
-        <slot></slot>
+    <article id="article" class="post-content">
+      <slot></slot>
     </article>
   </Container>
 </Layout>
@@ -47,29 +75,176 @@ const seo = {
   #article {
     padding-bottom: 3rem;
   }
+  
   .post-header__container {
     max-width: var(--theme-blog-post-header-width);
-    margin: 1rem auto;
+    margin: 2rem auto;
     padding: var(--container-padding);
   }
-  .post-tags__list {
-    margin: 1rem auto;
-    padding: 0;
-    list-style: none;
+  
+  /* 优化的标签样式 */
+  .post-tags {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    margin: 0 0 1.5rem 0;
+    flex-wrap: wrap;
   }
-  .post-tags__tag {
-    text-transform: uppercase;
+  
+  .tags-label {
+    font-size: 0.9rem;
+    color: var(--theme-text-light);
+    font-weight: 500;
+    white-space: nowrap;
+    margin-top: 0.25rem;
   }
-  .post-tags__tag a {
-    font-size: var(--font-size-sm);
+  
+  .tags-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  
+  .post-tag {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background: linear-gradient(135deg, var(--theme-primary) 0%, var(--theme-primary-light) 100%);
+    color: white;
     text-decoration: none;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(var(--theme-primary-rgb, 59, 130, 246), 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
   }
-  .post-layout__img {
-    margin: 0 auto 1rem auto;
-    border-radius: var(--theme-shape-radius);
+  
+  .post-tag:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(var(--theme-primary-rgb, 59, 130, 246), 0.3);
+    background: linear-gradient(135deg, var(--theme-primary-dark) 0%, var(--theme-primary) 100%);
   }
-  .post-layout__date {
-    margin-bottom: 1rem;
-    opacity: 0.84;
+  
+  /* 文章标题样式 */
+  .post-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--theme-text);
+    margin: 0 0 1rem 0;
+    text-align: center;
+  }
+  
+  /* 文章元信息 */
+  .post-meta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+    color: var(--theme-text-light);
+    font-size: 0.95rem;
+    flex-wrap: wrap;
+  }
+  
+  .post-date {
+    font-weight: 500;
+  }
+  
+  .meta-separator {
+    opacity: 0.5;
+  }
+  
+  .tags-count {
+    font-weight: 500;
+    color: var(--theme-primary);
+  }
+  
+  /* 特色图片样式 */
+  .featured-image-container {
+    margin: 2rem 0;
+    text-align: center;
+  }
+  
+  .post-featured-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+    transition: transform 0.3s ease;
+  }
+  
+  .post-featured-image:hover {
+    transform: scale(1.02);
+  }
+  
+  /* 文章内容样式 */
+  .post-content {
+    line-height: 1.7;
+    font-size: 1.1rem;
+    color: var(--theme-text);
+  }
+  
+  .post-content h2 {
+    font-size: 1.75rem;
+    margin: 2.5rem 0 1rem 0;
+    color: var(--theme-text);
+  }
+  
+  .post-content h3 {
+    font-size: 1.5rem;
+    margin: 2rem 0 1rem 0;
+    color: var(--theme-text);
+  }
+  
+  .post-content p {
+    margin-bottom: 1.5rem;
+  }
+  
+  /* 响应式设计 */
+  @media (max-width: 768px) {
+    .post-header__container {
+      margin: 1rem auto;
+      padding: 1rem;
+    }
+    
+    .post-title {
+      font-size: 2rem;
+    }
+    
+    .post-tags {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.75rem;
+    }
+    
+    .tags-label {
+      margin-top: 0;
+    }
+    
+    .post-meta {
+      flex-direction: column;
+      gap: 0.5rem;
+      text-align: center;
+    }
+    
+    .meta-separator {
+      display: none;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .post-title {
+      font-size: 1.75rem;
+    }
+    
+    .tags-container {
+      gap: 0.375rem;
+    }
+    
+    .post-tag {
+      padding: 0.375rem 0.75rem;
+      font-size: 0.8rem;
+    }
   }
 </style>
