@@ -3,12 +3,12 @@ const {text, href, newTab} = Astro.props;
 ---
 
 <div class="announcement-banner__container">
-  <p>
+  <p class="announcement-content">
     {newTab ?
-    <a href={href} target="_blank" rel="noopener noreferrer">
+    <a href={href} target="_blank" rel="noopener noreferrer" class="announcement-link">
       {text}
     </a> :
-    <a href={href}>
+    <a href={href} class="announcement-link">
       {text}
     </a>}
   </p>
@@ -16,16 +16,74 @@ const {text, href, newTab} = Astro.props;
 
 <style>
 .announcement-banner__container {
-  padding: 0.5rem;
+  padding: 0.75rem 1rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: var(--theme-primary);
+  justify-content: center;
+  background: linear-gradient(135deg, var(--theme-primary) 0%, var(--theme-primary-dark) 100%);
   color: var(--theme-on-primary);
   position: relative;
   z-index: 100;
+  text-align: center;
+  min-height: 3rem;
 }
-.announcement-banner__container p {
-  margin: 0 auto;
+
+.announcement-content {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 500;
+  line-height: 1.4;
 }
-</style>
+
+.announcement-link {
+  color: inherit;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.announcement-link:hover {
+  opacity: 0.9;
+  text-decoration: underline;
+  transform: translateY(-1px);
+}
+
+/* 添加一个小箭头图标提示（可选） */
+.announcement-link::after {
+  content: "→";
+  font-weight: bold;
+  transition: transform 0.2s ease;
+}
+
+.announcement-link:hover::after {
+  transform: translateX(2px);
+}
+
+/* 响应式优化 */
+@media (max-width: 768px) {
+  .announcement-banner__container {
+    padding: 0.5rem 0.75rem;
+    min-height: 2.5rem;
+  }
+  
+  .announcement-content {
+    font-size: 0.875rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .announcement-banner__container {
+    padding: 0.5rem;
+  }
+  
+  .announcement-content {
+    font-size: 0.85rem;
+  }
+  
+  .announcement-link::after {
+    content: ""; /* 在手机上隐藏箭头节省空间 */
+  }
+}

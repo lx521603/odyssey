@@ -3,18 +3,20 @@ import {Icon} from 'astro-icon/components'
 import { Button, FormInput } from '@components/odyssey-theme';
 
 const selectOptions = [
-  "Google Search",
-  "Social Media",
-  "Email",
+  "谷歌搜索",
+  "社交媒体", 
+  "电子邮件",
+  "朋友推荐",
+  "其他渠道"
 ]
 
 ---
 
-<form name="Contact Form" method="POST" action="/contact-thank-you" >
-  <FormInput type="text" label="First Name" name="First Name" placeholder="John" />
-  <FormInput type="text" label="Last Name" name="Last Name" placeholder="Doe" />
-  <FormInput type="email" label="Email" name="Email" placeholder="hello@example.com" />
-  <Button customIcon>提交
+<form name="contact-form" method="POST" action="/contact-thank-you" >
+  <FormInput type="text" label="姓氏" name="last-name" placeholder="张" />
+  <FormInput type="text" label="名字" name="first-name" placeholder="三" />
+  <FormInput type="email" label="电子邮箱" name="email" placeholder="hello@example.com" />
+  <Button customIcon>提交表单
     <Fragment slot="icon">
       <Icon name="ic:baseline-chevron-right" />
     </Fragment>
@@ -25,6 +27,18 @@ const selectOptions = [
   form {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 1rem;
+    gap: 1.5rem;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+  
+  /* 为中文优化字体和间距 */
+  form :global(.form-label) {
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+  
+  form :global(input) {
+    font-family: system-ui, -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
   }
 </style>

@@ -4,10 +4,10 @@ import {Button, FormInput } from "@components/odyssey-theme";
 
 ---
 
-<form name="Newsletter Form" method="POST" action="/newsletter-thank-you">
+<form name="newsletter-form" method="POST" action="/newsletter-thank-you">
   <div class="newsletter-form__container">
-    <FormInput name="Email" placeholder="hello@example.com"/>
-    <Button customIcon>Submit
+    <FormInput name="email" placeholder="请输入您的电子邮箱" type="email" required />
+    <Button customIcon>立即订阅
       <Fragment slot="icon">
         <Icon name="ic:baseline-chevron-right" />
       </Fragment>
@@ -20,10 +20,28 @@ import {Button, FormInput } from "@components/odyssey-theme";
   display: grid;
   grid-template-columns: 1fr auto;
   gap: 1rem;
+  max-width: 400px;
+  margin: 0 auto;
 }
+
+/* 为中文优化输入框样式 */
+.newsletter-form__container :global(input) {
+  font-family: system-ui, -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  padding: 0.75rem 1rem;
+}
+
+.newsletter-form__container :global(button) {
+  white-space: nowrap;
+}
+
 @media (max-width: 600px) {
   .newsletter-form__container {
     grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+  
+  .newsletter-form__container :global(button) {
+    width: 100%;
   }
 }
 </style>

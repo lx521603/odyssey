@@ -2,25 +2,43 @@
 import { Button, FormInput, FormSelect, FormTextarea } from '@components/odyssey-theme';
 
 const selectOptions = [
-  "Google Search",
-  "Social Media",
-  "Email",
+  "谷歌搜索",
+  "社交媒体",
+  "电子邮件",
+  "朋友推荐", 
+  "其他"
 ]
 
 ---
 
-<form name="Contact Form" method="POST" action="/contact-thank-you">
-  <FormInput type="text" label="Name" name="Name" placeholder="John Doe" />
-  <FormInput type="email" label="Email" name="Email" placeholder="hello@example.com" />
-  <FormSelect label="How Did You Hear About Us?" options={selectOptions} />
-  <FormTextarea label="Message" name="Message" placeholder="Your message here..." />
-  <Button>Submit</Button>
+<form name="contact-form" method="POST" action="/contact-thank-you">
+  <FormInput type="text" label="姓名" name="name" placeholder="请输入您的姓名" />
+  <FormInput type="email" label="电子邮箱" name="email" placeholder="hello@example.com" />
+  <FormSelect label="您是如何了解到我们的？" options={selectOptions} />
+  <FormTextarea label="留言内容" name="message" placeholder="请输入您的留言..." rows="6" />
+  <Button>提交表单</Button>
 </form>
 
 <style>
   form {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 1rem;
+    gap: 1.5rem;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  /* 可选：添加一些自定义样式让表单更好看 */
+  form :global(.form-input),
+  form :global(.form-select),
+  form :global(.form-textarea) {
+    width: 100%;
+  }
+  
+  form :global(.form-label) {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    display: block;
+    color: var(--theme-text);
   }
 </style>
