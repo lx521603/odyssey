@@ -1,16 +1,16 @@
 export const footerSocials = [
   {
-    name: 'Twitter',
+    name: '推特',
     url: 'https://twitter.com/oniyt1980',
     icon: "mdi:twitter",
   },
   {
-    name: 'Youtube',
+    name: 'YouTube',
     url: 'https://youtube.com/@jaydanurwin',
     icon: "mdi:youtube",
   },
   {
-    name: 'Github',
+    name: 'GitHub',
     url: 'https://github.com/lx521603',
     icon: "mdi:github",
   },
@@ -23,27 +23,27 @@ export const footerSocials = [
 
 export const footerLists = [
 	{
-		title: 'Landing Pages',
+		title: '落地页',
 		items: [
 			{
-				title: 'Landing Page 1',
+				title: '落地页 1',
 				slug: '/landing-pages/landing-1',
 			},
 			{
-				title: 'Landing Page 2',
+				title: '落地页 2',
 				slug: '/landing-pages/landing-2',
 			},
       // {
-			// 	title: 'Landing Page 3',
+			// 	title: '落地页 3',
 			// 	slug: '/landing-pages/landing-3',
 			// },
 		],
 	},
 	{
-		title: 'Company',
+		title: '公司',
 		items: [
 			{
-				title: '关于',
+				title: '关于我们',
 				slug: '/company/about',
 			},
 			{
@@ -51,28 +51,28 @@ export const footerLists = [
 				slug: '/blog',
 			},
 			{
-				title: '联系',
+				title: '联系我们',
 				slug: '/company/contact',
 			},
 		],
 	},
 	{
-		title: 'Theme',
+		title: '主题',
 		items: [
 			{
-				title: 'Get Started',
+				title: '开始使用',
 				slug: '/theme/get-started',
 			},
 			{
-				title: 'Style Guide',
+				title: '风格指南',
 				slug: '/theme/style-guide',
 			},
       {
-        title: 'Theme Setup',
+        title: '主题设置',
         slug: '/theme/theme-setup',
       },
       {
-        title: 'Customizing Odyssey',
+        title: '自定义 Odyssey',
         slug: '/theme/customizing-odyssey',
       }
 		],
