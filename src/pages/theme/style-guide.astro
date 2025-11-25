@@ -11,87 +11,82 @@ import {
 import Layout from '../../layouts/Page.astro';
 
 const seo = {
-	title: 'Astro Odyssey Theme Style Guide',
-	description: 'Get started on how to setup and use this Astro theme.',
+	title: 'Astro Odyssey 主题风格指南',
+	description: '了解如何设置和使用这个 Astro 主题。',
 };
 
-const selectOptions = ['Option 1', 'Option 2', 'Option 3'];
+const selectOptions = ['选项 1', '选项 2', '选项 3'];
 ---
 
 <Layout {seo}>
 	<Container>
 		<TextCardSection>
-			<h1>Style Guide</h1>
+			<h1>风格指南</h1>
 			<p>
-				This is the style guide for the <a
+				这是 <a
 					href="https://github.com/treefarmstudio/odyssey-theme"
 					target="_blank"
-					rel="noopener noreferrer">Odyssey Theme</a
-				>. Everything you'll find in the theme's starter repo is either a
-				component from the <a
+					rel="noopener noreferrer">Odyssey 主题</a
+				>的风格指南。您在主题起始仓库中找到的所有内容要么来自<a
 					href="https://www.npmjs.com/package/@components/odyssey-theme"
 					target="_blank"
-					rel="noopener noreferrer">Odyssey Components Package</a
-				> or built using a component. Not only does this allow for a fully modular
-				setup that receives updates and improvements over time but also allows you
-				to use bits and pieces as needed to create your own unique website with Odyssey
-				as the foundation.
+					rel="noopener noreferrer">Odyssey 组件包</a
+				>，要么是使用组件构建的。这不仅允许一个完全模块化的设置，能够随着时间的推移接收更新和改进，而且还允许您根据需要零散地使用这些部分，以 Odyssey 为基础创建您自己独特的网站。
 			</p>
 		</TextCardSection>
 		<section class="style-guide__section">
 			<div class="style-guide__title-container">
-				<h2>Colors</h2>
+				<h2>色彩</h2>
 			</div>
 			<div>
 				<div class="style-guide-color__card">
-					<h3>Primary</h3>
+					<h3>主色</h3>
 				</div>
 				<div class="style-guide-color__card style-guide-color__card--surface-1">
-					<h3>Surface 1</h3>
+					<h3>表面色 1</h3>
 				</div>
 				<div class="style-guide-color__card style-guide-color__card--surface-2">
-					<h3>Surface 2</h3>
+					<h3>表面色 2</h3>
 				</div>
 			</div>
 		</section>
 		<section class="style-guide__section">
 			<div class="style-guide__title-container">
-				<h2>Typography</h2>
+				<h2>排版</h2>
 			</div>
 			<div>
-				<h1>Heading 1</h1>
-				<h2>Heading 2</h2>
-				<h3>Heading 3</h3>
-				<h4>Heading 4</h4>
-				<h5>Heading 5</h5>
-				<h6>Heading 6</h6>
-				<p>Body Text</p>
+				<h1>一级标题</h1>
+				<h2>二级标题</h2>
+				<h3>三级标题</h3>
+				<h4>四级标题</h4>
+				<h5>五级标题</h5>
+				<h6>六级标题</h6>
+				<p>正文文本</p>
 				<blockquote>
-					“Don’t settle for what life gives you; make life better and build
-					something.” — Ashton Kutcher
+					“不要满足于生活给予你的；让生活更美好，去创造一些东西。” — 阿什顿·库彻
 				</blockquote>
 			</div>
 		</section>
 		<section class="style-guide__section">
 			<div class="style-guide__title-container">
-				<h2>Buttons</h2>
+				<h2>按钮</h2>
 			</div>
 			<div>
-				<p>Button</p>
+				<p>普通按钮</p>
 				<p>
-					<Button>Button 1</Button>
+					<Button>按钮 1</Button>
 				</p>
-				<p>Unelevated Button</p>
+				<p>无阴影按钮</p>
 				<p>
-					<Button unelevated>Button 2</Button>
+					<Button unelevated>按钮 2</Button>
 				</p>
-				<p>Outlined Button</p>
+				<p>线框按钮</p>
 				<p>
-					<Button outlined>Button 3</Button>
+					<Button outlined>按钮 3</Button>
 				</p>
-				<p>Button With Custom Icon</p>
+				<p>带自定义图标的按钮</p>
 				<Button customIcon
-					>Launch Page
+					>启动页面
 					<Fragment slot="icon">
 						<Icon name="ic:baseline-launch" />
 					</Fragment>
@@ -100,25 +95,25 @@ const selectOptions = ['Option 1', 'Option 2', 'Option 3'];
 		</section>
 		<section class="style-guide__section">
 			<div class="style-guide__title-container">
-				<h2>Forms</h2>
+				<h2>表单</h2>
 			</div>
 			<div class="style-guide-forms__container">
 				<div>
-					<h3>Input With Label</h3>
-					<FormInput type="text" label="Name" name="Name" placeholder="John Doe"
+					<h3>带标签的输入框</h3>
+					<FormInput type="text" label="姓名" name="Name" placeholder="张三"
 					/>
 				</div>
 				<div>
-					<h3>Input Without Label</h3>
-					<FormInput type="text" name="Name" placeholder="John Doe" />
+					<h3>无标签输入框</h3>
+					<FormInput type="text" name="Name" placeholder="张三" />
 				</div>
 				<div>
-					<h3>Select Dropdown</h3>
+					<h3>选择下拉框</h3>
 					<FormSelect options={selectOptions} />
 				</div>
 				<div>
-					<h3>Textarea</h3>
-					<FormTextarea name="Message" placeholder="Your message here..." />
+					<h3>文本区域</h3>
+					<FormTextarea name="Message" placeholder="在此输入您的消息..." />
 				</div>
 			</div>
 		</section>
