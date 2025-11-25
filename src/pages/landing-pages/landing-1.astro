@@ -13,25 +13,25 @@ import Layout from '../../layouts/Page.astro';
 import TextAndImageHero from '../../components/sections/heros/TextAndImageHero.astro';
 
 const seo = {
-	title: '落地页 #1 | Rich',
-	description: 'Landing Page #1 | Astro Odyssey Theme',
+	title: '落地页 #1 | 功能丰富',
+	description: '落地页 #1 | Astro Odyssey 主题',
 };
 ---
 
 <AnnouncementBar
-	text="Read Our Latest Blog Post"
+	text="阅读我们最新的博客文章"
 	href="/blog/posts/remote-work-mental-health/"
 	slot="announcement-bar"
 />
 <Layout {seo}>
 	<TextAndImageHero reversed>
 		<div slot="text-container">
-			<h1>Don't Reinvent the Wheel</h1>
-			<p>Use Odyssey Theme to jumpstart your company's marketing website.</p>
+			<h1>无需重复造轮子</h1>
+			<p>使用 Odyssey 主题快速启动您公司的营销网站。</p>
 		</div>
 		<div slot="btns-container">
 			<Button href="/theme/get-started" customIcon
-				>Get Started <Fragment slot="icon">
+				>开始使用 <Fragment slot="icon">
 					<Icon name="ic:baseline-chevron-right" />
 				</Fragment></Button
 			>
@@ -39,48 +39,39 @@ const seo = {
 		<picture slot="image-container">
 			<img
 				src="/assets/images/landing-1/landing-hero-1.jpg"
-				alt="Astro Odyssee"
+				alt="Astro Odyssey"
 				id="home-hero-image"
 			/>
 		</picture>
 	</TextAndImageHero>
 
 	<CustomerQuoteSection
-		quoteText="Lorem ipsum dolor sit amet consectetur adipisicing elit. Laborum, vero nobis? Voluptas assumenda, voluptatibus commodi qui ducimus delectus praesentium maiores, impedit iure labore ratione, ea facilis numquam doloremque aperiam aspernatur."
-		customerName="Happy Customer"
+		quoteText="我们非常满意 Odyssey 主题带来的效果，它让我们的网站在短时间内就具备了专业的外观和功能。团队的支持也很到位，强烈推荐给其他初创公司。"
+		customerName="满意客户"
 	/>
 
 	<ThreeColumnTextSection>
 		<div slot="column-1-body">
-			<h2>Why?</h2>
+			<h2>为什么选择？</h2>
 			<p>
-				Lorem ipsum dolor sit amet consectetur adipisicing elit. Est dolorem
-				tempore odio! Nemo consectetur ipsa aperiam similique maxime maiores
-				consequatur explicabo ut quibusdam fugiat corporis, dignissimos tenetur,
-				mollitia cumque. Velit.
+				我们的主题经过精心设计，专为现代企业打造。它结合了最新的网页设计趋势和最佳实践，确保您的网站在竞争激烈的市场中脱颖而出。
 			</p>
 		</div>
-		<Button slot="column-1-cta">Learn More</Button>
+		<Button slot="column-1-cta">了解更多</Button>
 		<div slot="column-2-body">
-			<h2>How?</h2>
+			<h2>如何使用？</h2>
 			<p>
-				Lorem ipsum dolor sit amet consectetur adipisicing elit. Est dolorem
-				tempore odio! Nemo consectetur ipsa aperiam similique maxime maiores
-				consequatur explicabo ut quibusdam fugiat corporis, dignissimos tenetur,
-				mollitia cumque. Velit.
+				只需几个简单步骤，您就可以拥有一个功能完整的专业网站。我们的文档详细易懂，即使没有技术背景也能轻松上手。
 			</p>
 		</div>
-		<Button slot="column-2-cta" outlined>Learn More</Button>
+		<Button slot="column-2-cta" outlined>了解更多</Button>
 		<div slot="column-3-body">
-			<h2>What?</h2>
+			<h2>包含什么？</h2>
 			<p>
-				Lorem ipsum dolor sit amet consectetur adipisicing elit. Est dolorem
-				tempore odio! Nemo consectetur ipsa aperiam similique maxime maiores
-				consequatur explicabo ut quibusdam fugiat corporis, dignissimos tenetur,
-				mollitia cumque. Velit.
+				我们提供完整的网站解决方案，包括响应式设计、SEO优化、高性能代码等。所有功能都经过精心优化，确保最佳用户体验。
 			</p>
 		</div>
-		<Button slot="column-3-cta">Learn More</Button>
+		<Button slot="column-3-cta">了解更多</Button>
 	</ThreeColumnTextSection>
 
 	<YouTubeEmbedSection url="https://www.youtube.com/watch?v=cbYr75_R15M" rounded
@@ -88,27 +79,18 @@ const seo = {
 
 	<StickyTextImageSection>
 		<div slot="text-container">
-			<h2>Features</h2>
-			<h3>SEO</h3>
+			<h2>核心功能</h2>
+			<h3>SEO优化</h3>
 			<p>
-				Lorem ipsum dolor sit amet consectetur adipisicing elit. Est dolorem
-				tempore odio! Nemo consectetur ipsa aperiam similique maxime maiores
-				consequatur explicabo ut quibusdam fugiat corporis, dignissimos tenetur,
-				mollitia cumque. Velit.
+				内置完整的SEO优化功能，帮助您的网站在搜索引擎中获得更好的排名。包括结构化数据、元标签优化和站点地图自动生成。
 			</p>
-			<h3>Responsive</h3>
+			<h3>响应式设计</h3>
 			<p>
-				Lorem ipsum dolor sit amet consectetur adipisicing elit. Est dolorem
-				tempore odio! Nemo consectetur ipsa aperiam similique maxime maiores
-				consequatur explicabo ut quibusdam fugiat corporis, dignissimos tenetur,
-				mollitia cumque. Velit.
+				完美适配各种设备，从桌面电脑到移动手机，确保您的网站在所有屏幕尺寸上都能提供出色的浏览体验。
 			</p>
-			<h3>Themeable</h3>
+			<h3>主题定制</h3>
 			<p>
-				Lorem ipsum dolor sit amet consectetur adipisicing elit. Est dolorem
-				tempore odio! Nemo consectetur ipsa aperiam similique maxime maiores
-				consequatur explicabo ut quibusdam fugiat corporis, dignissimos tenetur,
-				mollitia cumque. Velit.
+				通过简单的CSS变量即可轻松定制主题外观。无需深入代码，就能创建属于您品牌的独特视觉风格。
 			</p>
 		</div>
 		<picture slot="image-container">
@@ -124,13 +106,12 @@ const seo = {
 		background="var(--theme-surface-2)"
 		color="var(--theme-on-surface-2)"
 	>
-		<h2>Start Your Website Today</h2>
+		<h2>立即开始构建您的网站</h2>
 		<p>
-			It only takes a couple clicks to have a new, modern website for your
-			business or startup.
+			只需几次点击，就能为您的企业或初创公司拥有一个全新的现代化网站。
 		</p>
 		<Button href="/theme/get-started" customIcon
-			>Get Started <Fragment slot="icon">
+			>开始使用 <Fragment slot="icon">
 				<Icon name="ic:baseline-chevron-right" />
 			</Fragment></Button
 		>
