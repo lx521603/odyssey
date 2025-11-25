@@ -17,10 +17,8 @@ export default {
   enableThemeSwitcher: false,
 };
 
----
+```
 
-**第3段：CSS 代码块**
-```markdown
 ```css
 :root {
 	/* 主题色彩 */
@@ -60,15 +58,11 @@ export default {
 	--theme-font-family-sans: 'Lato', -apple-system, BlinkMacSystemFont,
 		sans-serif;
 }
-
----
-
-**第4段：色彩部分**
-```markdown
+```
 ## 色彩
 
 以下是颜色属性的简要说明：
-
+```
 - `--theme-primary` - 主题的主色调。这将是按钮背景使用的颜色。
 - `--theme-primary-hover` - 当鼠标悬停时，您希望主色调变成的颜色。
 - `--theme-on-primary` - 叠加在主色调之上的文本颜色。
@@ -78,6 +72,7 @@ export default {
 - `--theme-on-surface-1` - 在 surface-1 颜色之上使用的文本颜色
 - `--theme-surface-2` - 类似于 surface-1 颜色，但使用频率较低。可以更富创意地使用这个表面色，使其在页面上脱颖而出。
 - `--theme-on-surface-2` - 在 surface-2 颜色之上使用的文本颜色
+```
 ## 形状
 
 您会注意到 Odyssey 主题有很多圆角，但仔细观察，当启用"深色"主题时，所有边角都是直边。这是因为全局的 `--theme-shape-radius` 属性。它将决定卡片和图片等元素的形状。
@@ -87,12 +82,13 @@ export default {
 有时您希望动画效果保持一致，尤其是在悬停效果上。这时您可以使用 `--theme-transition` 属性。
 
 ## 布局
-
+```
 - `--section-margin` - 区块之间的默认上下边距
 - `--theme-grid-gap` - 卡片、图片等网格布局中项目之间的默认间距
 - `--container-max-width` - 内容的默认容器最大宽度
 - `--container-max-width-narrow` - 内容的窄版容器最大宽度
 - `--container-padding` - 容器的默认内边距（间距）
+```
 ## 自定义字体
 
 1. 将您自己的字体添加到 `/public/assets/fonts` 目录
