@@ -8,8 +8,7 @@ description: 学习如何设置 Odyssey 主题的 SEO、Logo、网站图标、�
 
 ## 全局 SEO
 
-在主题文件中，您会在 `src/config/` 文件夹下找到一个 `settings.js` 文件。文件内容应该看起来像这样：
-
+在主题文件中，您会在 `src/config/` 文件夹下找到一个 `settings.js` 文件。该文件的内容应该看起来像这样：
 ```js
 export default {
   title: `Odyssey Astro 主题 | 面向初创公司和企业的营销网站主题`,
@@ -17,14 +16,15 @@ export default {
   url: `https://odyssey-theme.sapling.supply`, // 不要有末尾斜杠！
   name: `Odyssey`, // 企业或品牌名称的简称。用于页脚版权信息等地方。
   enableThemeSwitcher: true,
-};  
-```
+};
 
-这里的标题和描述字段用作全局默认值，如果在页面级别没有提供的话。
+---
 
-添加您自己的 Logo
+**第3段：Logo 部分**
+```markdown
+## 添加您自己的 Logo
 
-在 src/components/ 下，您会看到一个 Logo.astro 文件，应该看起来像这样：
+在 `src/components/` 下，您会看到一个 `Logo.astro` 文件，应该看起来像这样：
 
 ```astro
 <p class="odyssey-logo">Odyssey</p>
@@ -42,31 +42,28 @@ export default {
     cursor: pointer;
   }
 </style>
-```
 
-在整个网站中替换 Odyssey Logo 最简单的方法是用您公司 Logo 的 SVG 代码替换此代码，或者使用链接到您公司 Logo 的 <img> 标签。
+---
 
-更新后，您应该会看到整个主题中的 Odyssey Logo 都发生了变化。
+**第4段：网站图标和社交图片**
+```markdown
+## 网站图标
 
-如果您想要更多控制，或者不喜欢这种使用 <Logo> 组件的方法，您会发现大多数组件也包含一个用于 Logo 的 <slot>，可以让您完全替换它。
+要替换网站图标，您只需创建自己的 `favicon.png` 文件并替换 `public/` 文件夹下的那个文件。
 
-网站图标
-
-要替换网站图标，您只需创建自己的 favicon.png 文件并替换 public/ 文件夹下的那个文件。
-
-如果您不想使用 .png 文件，您需要到 src/components/head/ 下的 BaseHead.astro 组件中找到这一行，用您自己的网站图标文件替换它。
+如果您不想使用 `.png` 文件，您需要到 `BaseHead.astro` 组件（位于 `src/components/head/` 下）中找到这一行，用您自己的网站图标文件替换它：
 
 ```html
 <link rel="icon" type="image/png" href="/favicon.png" />
-```
 
-Open Graph / 社交图片
 
-要替换当您网站链接被分享时显示的默认 Open Graph 图片，请创建您自己的 social.png 文件并替换 public/ 文件夹下的那个文件。
+---
 
-导航项
+**第5段：导航项**
+```markdown
+## 导航项
 
-自定义导航项很容易，只需编辑 src/config/ 文件夹下 nav.js 文件中的项目数组即可。
+自定义导航项很容易，只需编辑 `src/config/` 文件夹下 `nav.js` 文件中的项目数组即可。
 
 它看起来像这样：
 
@@ -89,16 +86,18 @@ export const nav = [
     slug: '/company/contact',
   },
 ];
-```
 
-页脚链接
+---
 
-在 src/config/ 文件夹中，您会找到一个 footer.js 文件，这是更新页脚社交图标、社交链接和页脚导航项的地方。
+**第6段：页脚链接开头**
+```markdown
+## 页脚链接
 
-社交链接
+在 `src/config/` 文件夹中，您会找到一个 `footer.js` 文件，这是更新页脚社交图标、社交链接和页脚导航项的地方。
+
+### 社交链接
 
 社交链接列表看起来像这样：
-
 ```js
 export const footerSocials = [
   {
@@ -118,15 +117,14 @@ export const footerSocials = [
     icon: githubIcon,
   },
 ];
-```
 
-这些 URL 已经设置为在用户点击时安全地打开新标签页，如果您对提供的图标满意，只需更换 URL 即可。
+---
 
-但是，如果您想要自定义图标，可以通过在 src/icons/ 文件夹下的 icons.js 文件中提供您自己的图标 SVG 来实现。
+**第8段：页脚链接列表**
+```markdown
+### 页脚链接列表
 
-页脚链接列表
-
-与顶级导航项类似，您会在 footer.js 中看到一个 footerLists 数组：
+与顶级导航项类似，您会在 `footer.js` 中看到一个 `footerLists` 数组：
 
 ```js
 export const footerLists = [
@@ -144,15 +142,16 @@ export const footerLists = [
     ],
   },
   ...
-```
 
-标题是列表的不可点击标题，嵌套的 items 数组是该标题下的链接列表。请根据需要自定义这些列表。
+---
 
-网站地图
+**第9段：网站地图部分**
+```markdown
+## 网站地图
 
-Odyssey 主题将使用 Astro 的 @astrojs/sitemap 集成自动为您生成 sitemap.xml 文件。
+Odyssey 主题将使用 Astro 的 `@astrojs/sitemap` 集成自动为您生成 `sitemap.xml` 文件。
 
-要使用正确的 URL 设置网站地图，您需要打开主题文件根级别的 astro.config.mjs，它应该看起来像这样：
+要使用正确的 URL 设置网站地图，您需要打开主题文件根级别的 `astro.config.mjs`，它应该看起来像这样：
 
 ```js
 import { defineConfig } from 'astro/config';
@@ -166,10 +165,6 @@ export default defineConfig({
   sitemap: true,
   // 生成网站地图（设置为 "false" 以禁用）
   integrations: [lit(), sitemap()] // 向配置添加渲染器
-
 });
-```
 
-只需用您网站将要托管的实时 URL 编辑 site: 字段，您就全部设置好了！
-
-```
+---
