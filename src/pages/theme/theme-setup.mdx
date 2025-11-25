@@ -18,10 +18,6 @@ export default {
   enableThemeSwitcher: true,
 };
 
----
-
-**第3段：Logo 部分**
-```markdown
 ## 添加您自己的 Logo
 
 在 `src/components/` 下，您会看到一个 `Logo.astro` 文件，应该看起来像这样：
@@ -42,11 +38,8 @@ export default {
     cursor: pointer;
   }
 </style>
+```
 
----
-
-**第4段：网站图标和社交图片**
-```markdown
 ## 网站图标
 
 要替换网站图标，您只需创建自己的 `favicon.png` 文件并替换 `public/` 文件夹下的那个文件。
@@ -55,19 +48,14 @@ export default {
 
 ```html
 <link rel="icon" type="image/png" href="/favicon.png" />
-
-
----
-
-**第5段：导航项**
-```markdown
+```
 ## 导航项
 
 自定义导航项很容易，只需编辑 `src/config/` 文件夹下 `nav.js` 文件中的项目数组即可。
 
 它看起来像这样：
 
-```js
+```
 export const nav = [
   {
     title: '首页',
@@ -86,11 +74,8 @@ export const nav = [
     slug: '/company/contact',
   },
 ];
+```
 
----
-
-**第6段：页脚链接开头**
-```markdown
 ## 页脚链接
 
 在 `src/config/` 文件夹中，您会找到一个 `footer.js` 文件，这是更新页脚社交图标、社交链接和页脚导航项的地方。
@@ -98,7 +83,7 @@ export const nav = [
 ### 社交链接
 
 社交链接列表看起来像这样：
-```js
+```
 export const footerSocials = [
   {
     url: 'https://instagram.com/',
@@ -117,11 +102,8 @@ export const footerSocials = [
     icon: githubIcon,
   },
 ];
+```
 
----
-
-**第8段：页脚链接列表**
-```markdown
 ### 页脚链接列表
 
 与顶级导航项类似，您会在 `footer.js` 中看到一个 `footerLists` 数组：
@@ -141,12 +123,8 @@ export const footerLists = [
       },
     ],
   },
-  ...
+```
 
----
-
-**第9段：网站地图部分**
-```markdown
 ## 网站地图
 
 Odyssey 主题将使用 Astro 的 `@astrojs/sitemap` 集成自动为您生成 `sitemap.xml` 文件。
@@ -166,5 +144,4 @@ export default defineConfig({
   // 生成网站地图（设置为 "false" 以禁用）
   integrations: [lit(), sitemap()] // 向配置添加渲染器
 });
-
----
+```
