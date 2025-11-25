@@ -1,31 +1,30 @@
 ---
 layout: '../../layouts/Post.astro'
-title: Theme Setup
-description: Learn how to setup Odyssey Theme's seo, logo, favicon, nav items, etc.
+title: 主题设置
+description: 学习如何设置 Odyssey 主题的 SEO、Logo、网站图标、导航项等。
 ---
 
-After you've had some time to familiarize yourself with the the theme files you're probably wondering "How do I make it my own?" This guide will help you swap out titles, descriptions, logos, etc.
+在您花了一些时间熟悉主题文件之后，您可能在想"如何让它变成我自己的？"本指南将帮助您替换标题、描述、Logo 等。
 
+## 全局 SEO
 
-## Global SEO
-
-In the theme files you'll find a `settings.js` file under the `src/config/` folder. The contents of the file should look something like this:
+在主题文件中，您会在 `src/config/` 文件夹下找到一个 `settings.js` 文件。文件内容应该看起来像这样：
 
 ```js
 export default {
-  title: `Odyssey Astro Theme | A Marketing Website Theme for Startups and Businesses`,
-  description: `A simple, clean, and modern theme a startup or businesses' marketing website.`,
-  url: `https://odyssey-theme.sapling.supply`, // No trailing slash!
-  name: `Odyssey`, // The short name of the business or brand name. Used for things like the copyright in the footer.
+  title: `Odyssey Astro 主题 | 面向初创公司和企业的营销网站主题`,
+  description: `一个简单、干净、现代的初创公司或企业营销网站主题。`,
+  url: `https://odyssey-theme.sapling.supply`, // 不要有末尾斜杠！
+  name: `Odyssey`, // 企业或品牌名称的简称。用于页脚版权信息等地方。
   enableThemeSwitcher: true,
 };  
 ```
 
-The title and description fields here are used as the global defaults if one is not provided at the page level.
+这里的标题和描述字段用作全局默认值，如果在页面级别没有提供的话。
 
-## Adding Your Own Logo
+添加您自己的 Logo
 
-Under `src/components/` you'll see a `Logo.astro` file that should look something like this:
+在 src/components/ 下，您会看到一个 Logo.astro 文件，应该看起来像这样：
 
 ```astro
 <p class="odyssey-logo">Odyssey</p>
@@ -45,60 +44,60 @@ Under `src/components/` you'll see a `Logo.astro` file that should look somethin
 </style>
 ```
 
-The easiest way to swap out the Odyssey logo across the site is to replace this code with the SVG code for your company's logo or using an `<img>` tag linked to your company logo.
+在整个网站中替换 Odyssey Logo 最简单的方法是用您公司 Logo 的 SVG 代码替换此代码，或者使用链接到您公司 Logo 的 <img> 标签。
 
-You should see that the Odyssey logo changes across the theme once this is updated.
+更新后，您应该会看到整个主题中的 Odyssey Logo 都发生了变化。
 
-If you would like more control or don't like this method of using a `<Logo>` component you will find most of the components also include a `<slot>` for the logo which will let you completely replace it.
+如果您想要更多控制，或者不喜欢这种使用 <Logo> 组件的方法，您会发现大多数组件也包含一个用于 Logo 的 <slot>，可以让您完全替换它。
 
-## Favicon
+网站图标
 
-To replace the favicon you simply need to create your own `favicon.png` file and replace the one found under the `public/` folder.
+要替换网站图标，您只需创建自己的 favicon.png 文件并替换 public/ 文件夹下的那个文件。
 
-If you don't want to use a `.png` file you will need to go to the `BaseHead.astro` component under `src/components/head/` and find this line to replace with your own favicon file.
+如果您不想使用 .png 文件，您需要到 src/components/head/ 下的 BaseHead.astro 组件中找到这一行，用您自己的网站图标文件替换它。
 
 ```html
 <link rel="icon" type="image/png" href="/favicon.png" />
 ```
 
-## Open Graph / Social Image
+Open Graph / 社交图片
 
-To replace the default Open Graph image that displays when the link to your website is shared create your own `social.png` file and replace the one found under the `public/` folder.
+要替换当您网站链接被分享时显示的默认 Open Graph 图片，请创建您自己的 social.png 文件并替换 public/ 文件夹下的那个文件。
 
-## Navigation Items
+导航项
 
-Customizing the navigation items is easily done by editing the array of items in the `nav.js` file found under the `src/config/` folder.
+自定义导航项很容易，只需编辑 src/config/ 文件夹下 nav.js 文件中的项目数组即可。
 
-It will look something like this:
+它看起来像这样：
 
 ```js
 export const nav = [
   {
-    title: 'Home',
+    title: '首页',
     slug: '/',
   },
   {
-    title: 'Blog',
+    title: '博客',
     slug: '/blog',
   },
   {
-    title: 'About',
+    title: '关于我们',
     slug: '/company/about',
   },
   {
-    title: 'Contact',
+    title: '联系我们',
     slug: '/company/contact',
   },
 ];
 ```
 
-## Footer Links
+页脚链接
 
-In the `src/config/` folder you'll find at `footer.js` file which is where the footer social icons, social links, and the footer nav items are updated.
+在 src/config/ 文件夹中，您会找到一个 footer.js 文件，这是更新页脚社交图标、社交链接和页脚导航项的地方。
 
-### Social Links
+社交链接
 
-The social links list will look something like this.
+社交链接列表看起来像这样：
 
 ```js
 export const footerSocials = [
@@ -121,25 +120,25 @@ export const footerSocials = [
 ];
 ```
 
-The URLs are already set to safely open a new tab for the user when clicked so simply change our the URLs if you're happy with the icons provided.
+这些 URL 已经设置为在用户点击时安全地打开新标签页，如果您对提供的图标满意，只需更换 URL 即可。
 
-However, if you'd like to customize the icons you can do this by providing your own icon SVGs in the `icons.js` file under the `src/icons/` folder.
+但是，如果您想要自定义图标，可以通过在 src/icons/ 文件夹下的 icons.js 文件中提供您自己的图标 SVG 来实现。
 
-### Footer Link Lists
+页脚链接列表
 
-Similar to the top-level nav items you'll see a `footerLists` array in `footer.js`
+与顶级导航项类似，您会在 footer.js 中看到一个 footerLists 数组：
 
 ```js
 export const footerLists = [
   {
-    title: 'Landing Pages',
+    title: '落地页',
     items: [
       {
-        title: 'Landing Page 1',
+        title: '落地页 1',
         slug: '/landing-pages/landing-1',
       },
       {
-        title: 'Landing Page 2',
+        title: '落地页 2',
         slug: '/landing-pages/landing-2',
       },
     ],
@@ -147,13 +146,13 @@ export const footerLists = [
   ...
 ```
 
-The title is the non-clickable title of the list and the nested items array is the list of links under that title. Feel free to customize the lists as needed.
+标题是列表的不可点击标题，嵌套的 items 数组是该标题下的链接列表。请根据需要自定义这些列表。
 
-## Sitemap
+网站地图
 
-Odyssey Theme will automatically generate a `sitemap.xml` file for you using Astro's `@astrojs/sitemap` integration. 
+Odyssey 主题将使用 Astro 的 @astrojs/sitemap 集成自动为您生成 sitemap.xml 文件。
 
-To setup the sitemap with the correct URLs you will need to open the `astro.config.mjs` at the base level of the theme files which should look something like this
+要使用正确的 URL 设置网站地图，您需要打开主题文件根级别的 astro.config.mjs，它应该看起来像这样：
 
 ```js
 import { defineConfig } from 'astro/config';
@@ -163,12 +162,14 @@ import sitemap from "@astrojs/sitemap";
 // https://astro.build/config
 export default defineConfig({
   site: 'https://odyssey-theme.sapling.supply/',
-  // Your public domain, e.g.: https://my-site.dev/. Used to generate sitemaps and canonical URLs.
+  // 您的公共域名，例如：https://my-site.dev/。用于生成网站地图和规范 URL。
   sitemap: true,
-  // Generate sitemap (set to "false" to disable)
-  integrations: [lit(), sitemap()] // Add renderers to the config
+  // 生成网站地图（设置为 "false" 以禁用）
+  integrations: [lit(), sitemap()] // 向配置添加渲染器
 
 });
 ```
 
-Simply edit the `site:` field with the live URL that your website will be hosted on and you're all set!
+只需用您网站将要托管的实时 URL 编辑 site: 字段，您就全部设置好了！
+
+```
